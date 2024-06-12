@@ -22,12 +22,10 @@ const commentSchema = new mongoose.Schema({
     default: false,
   },
   likes: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "User",
+    type: [String],
   },
   dislikes: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "User",
+    type: [String],
   },
 });
 

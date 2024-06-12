@@ -3,4 +3,9 @@ const router = express.Router();
 
 const AdminController = require("../controllers/adminController");
 
-router.route("/:email").get(AdminController.checkIfAdmin).post();
+router
+  .route("/")
+  .get(AdminController.checkIfAdmin)
+  .post(AdminController.addAdmin);
+
+module.exports = router;

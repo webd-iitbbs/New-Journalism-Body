@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const articleSchema = new mongoose.Schema({
   articleId: {
     type: Number,
-    required: [true, "Please provide id"],
   },
   slug: {
     // slug is a URL friendly version of the article name
@@ -12,7 +11,7 @@ const articleSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  name: {
+  title: {
     type: String,
     required: [true, "Please provide name"],
   },
@@ -46,8 +45,7 @@ const articleSchema = new mongoose.Schema({
     default: "draft",
   },
   upVotes: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "User",
+    type: [String],
   },
 });
 
