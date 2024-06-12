@@ -94,7 +94,18 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // send token to mail
 
-  const message = `Forgot your password? Submit this ${resetToken} token with your new password.\nIf you didn't forget your password, please ignore this email!`;
+  const message = `
+Dear User,
+
+Did you forget your password? No worries! Simply submit the following token along with your new password to reset it:
+
+Token: ${resetToken}
+
+If you didn't request a password reset, please disregard this email.
+
+Best regards,
+Oracle Team
+`;
 
   await sendmail({
     email: user.email,
