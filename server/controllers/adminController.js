@@ -9,17 +9,25 @@ const AppError = require("../utils/appError");
 // Add an admin - addAdmin
 
 exports.checkIfAdminMiddleware = catchAsync(async (req, res, next) => {
-  const { email } = req.body;
-  const admin = await Admin.findOne({ email });
+  const { _id } = req.body;
+  const user = await User.findById(_id);
+  if (!user) return next(new AppError("User not found", 404));
+
+  const admin = await Admin.findOne({ email: user.email });
   if (!admin) {
     return next(new AppError("You are not authorized", 401));
   }
+  req.user = user;
   next();
 });
 
 exports.checkIfAdmin = catchAsync(async (req, res, next) => {
-  const { email } = req.body;
-  const admin = await Admin.findOne({ email });
+  const { _id } = req.body;
+  const user = await User.findById(_id);
+
+  if (!user) return next(new AppError("User not found", 404));
+
+  const admin = await Admin.findOne({ email: user.email });
   if (!admin) {
     return next(new AppError("You are not authorized", 401));
   }

@@ -38,6 +38,13 @@ exports.createArticle = catchAsync(async (req, res, next) => {
     category,
     coverImage,
     tags,
+    addedOrUpdatedBy: [
+      {
+        userId: req.user._id,
+        date: new Date(),
+        modification: "added",
+      },
+    ],
   });
   return res.status(201).json({ article });
 });
@@ -65,7 +72,16 @@ exports.updateStatus = catchAsync(async (req, res, next) => {
   const { slug, status } = req.body;
   const article = await Article.findOneAndUpdate(
     { slug },
-    { status },
+    {
+      status,
+      $push: {
+        addedOrUpdatedBy: {
+          userId: req.user._id,
+          date: new Date(),
+          modification: "status updated",
+        },
+      },
+    },
     { new: true }
   );
   if (!article) {
@@ -90,12 +106,19 @@ exports.changeSlug = catchAsync(async (req, res, next) => {
     return next(new AppError("Slug already exists", 400));
   }
 
-  const article = await Article.findOne({ slug });
+  const article = await Article.findOne({ slug }).select("+addedOrUpdatedBy");
   if (!article) {
     return next(new AppError("Article not found", 404));
   }
   newSlug = newSlug.toLowerCase().split(" ").join("-");
   article.slug = newSlug;
+
+  article.addedOrUpdatedBy.push({
+    userId: req.user._id,
+    date: new Date(),
+    modification: "slug updated",
+  });
+
   await article.save();
   return res.status(200).json({ article });
 });
@@ -103,7 +126,7 @@ exports.changeSlug = catchAsync(async (req, res, next) => {
 exports.updateArticle = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
   const { title, content, category, coverImage, tags } = req.body;
-  const article = await Article.findOne({ slug });
+  const article = await Article.findOne({ slug }).select("+addedOrUpdatedBy");
 
   if (!article) {
     return next(new AppError("Article not found", 404));
@@ -114,6 +137,13 @@ exports.updateArticle = catchAsync(async (req, res, next) => {
   if (category) article.category = category;
   if (coverImage) article.coverImage = coverImage;
   if (tags && tags.length > 0) article.tags = tags;
+
+  article.addedOrUpdatedBy.push({
+    userId: req.user._id,
+    date: new Date(),
+    modification: "updated",
+  });
+
   await article.save();
   return res
     .status(200)

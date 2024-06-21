@@ -21,10 +21,18 @@ exports.getAnnouncements = catchAsync(async (req, res, next) => {
 
 exports.createAnnouncement = catchAsync(async (req, res, next) => {
   const { title, coverImage, content } = req.body;
+
   const announcement = await Announcement.create({
     title,
     coverImage,
     content,
+    addedOrUpdatedBy: [
+      {
+        userId: req.user._id,
+        date: new Date(),
+        modification: "added",
+      },
+    ],
   });
   res.status(201).json({
     status: "success",
@@ -42,6 +50,13 @@ exports.updateAnnouncement = catchAsync(async (req, res, next) => {
       title,
       coverImage,
       content,
+      $push: {
+        addedOrUpdatedBy: {
+          userId: req.user._id,
+          date: new Date(),
+          modification: "updated",
+        },
+      },
     },
     { new: true }
   );
@@ -54,11 +69,18 @@ exports.updateAnnouncement = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteAnnouncement = catchAsync(async (req, res, next) => {
-  const announcement = await Announcement.findById(req.params.id);
+  const announcement = await Announcement.findById(req.params.id).select(
+    "+addedOrUpdatedBy"
+  );
   if (!announcement)
     return next(new AppError("No announcement found with that ID", 404));
-
+  console.log(announcement);
   announcement.deleted = true;
+  announcement.addedOrUpdatedBy.push({
+    userId: req.user._id,
+    date: new Date(),
+    modification: "deleted",
+  });
   await announcement.save({ validateBeforeSave: false });
 
   res.status(204).json({

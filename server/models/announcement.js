@@ -1,5 +1,19 @@
 const mongoose = require("mongoose");
 
+const addedOrUpdatedBySchema = new mongoose.Schema({
+  userId: {
+    type: String,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  modification: {
+    type: String,
+    default: "added",
+  },
+});
+
 const annoucementSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -18,6 +32,10 @@ const annoucementSchema = new mongoose.Schema({
   deleted: {
     type: Boolean,
     default: false,
+  },
+  addedOrUpdatedBy: {
+    type: [addedOrUpdatedBySchema],
+    select: false,
   },
 });
 

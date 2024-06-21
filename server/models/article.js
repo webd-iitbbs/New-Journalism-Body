@@ -1,5 +1,19 @@
 const mongoose = require("mongoose");
 
+const addedOrUpdatedBySchema = new mongoose.Schema({
+  userId: {
+    type: String,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  modification: {
+    type: String,
+    default: "added",
+  },
+});
+
 const articleSchema = new mongoose.Schema({
   articleId: {
     type: Number,
@@ -46,6 +60,10 @@ const articleSchema = new mongoose.Schema({
   },
   upVotes: {
     type: [String],
+  },
+  addedOrUpdatedBy: {
+    type: [addedOrUpdatedBySchema],
+    select: false,
   },
 });
 
