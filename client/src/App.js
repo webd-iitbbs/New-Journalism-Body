@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
-function App() {
+import Homepage from "./pages/Homepage";
+import Articlepage from "./pages/Articlepage";
+import Navbar from "./components/Navbar";
+
+const AllRoutes = () => {
+  const location = useLocation();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes location={location} key={location.key}>
+      <Route path="/" element={<Homepage />} />
+      <Route path="/article/:id" element={<Articlepage />} />
+    </Routes>
+  );
+};
+
+export default function App() {
+  return (
+    <HashRouter>
+      <AnimatePresence>
+        <Navbar />
+        <AllRoutes />
+      </AnimatePresence>
+    </HashRouter>
   );
 }
-
-export default App;
