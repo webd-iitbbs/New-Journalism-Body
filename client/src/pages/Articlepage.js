@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { API } from "../store/utils/API";
-import { formatDate } from "../store/utils/helperFunctions";
+import { formatDate, notify } from "../store/utils/helperFunctions";
 import "suneditor/dist/css/suneditor.min.css";
 import { useQuery } from "react-query";
-
 const fetchArticle = async (slug) => {
   try {
     const response = await API.get(`/api/v1/article/${slug}`);
@@ -30,12 +29,15 @@ const Articlepage = () => {
   });
 
   if (isLoading) return <div>Loading...</div>;
-  if (article?.error)
+  if (article?.error) {
+    notify(article?.message);
     return (
       <div className="font-bold text-4xl text-center p-4 text-red-700">
         {article?.message ? article.message : "Error loading article"}
       </div>
     );
+  }
+
   return (
     <div className="p-8 md:p-20 flex flex-col lg:flex-row gap-4">
       <div className="w-full lg:w-3/4">
@@ -71,7 +73,7 @@ const Articlepage = () => {
         </div>
         <div
           dangerouslySetInnerHTML={{ __html: article.content }}
-          className="text-justify"
+          className="text-justify mt-8"
         ></div>
       </div>
       <div className="w-1/4">

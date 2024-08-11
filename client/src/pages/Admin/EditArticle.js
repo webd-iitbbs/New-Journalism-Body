@@ -5,10 +5,31 @@ import { API } from "../../store/utils/API";
 import { notify } from "../../store/utils/helperFunctions";
 import debounce from "lodash/debounce";
 import { useAuth } from "../../store/context/LoginContext";
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+
+const fetchArticle = async (slug, userid) => {
+  if (!slug || !userid) return {};
+  try {
+    const response = await API.get(`/api/v1/article/${slug}/admin`, {
+      headers: {
+        Authorization: `Bearer ${userid}`,
+      },
+    });
+    return response.data.article;
+  } catch (error) {
+    console.error("Error fetching article", error);
+    error.error = true;
+    return error.response.data;
+  }
+};
 
 const AddArticle = () => {
   const authCtx = useAuth();
+  const { slugid } = useParams();
   const userid = authCtx.userId;
+  const navigate = useNavigate();
+
   const [coverImage, setCoverImage] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -25,6 +46,34 @@ const AddArticle = () => {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const {
+    data: article,
+    error,
+    isLoading,
+  } = useQuery(
+    ["article", slugid],
+    () => fetchArticle(slugid, authCtx.userId),
+    {
+      retry: 2,
+      enabled: !!slugid && !!authCtx.userId,
+      staleTime: 10 * 60 * 1000, // Data is considered fresh for 10 minutes
+      cacheTime: 60 * 60 * 1000, // Data is considered stale after 60 minutes
+    }
+  );
+
+  useEffect(() => {
+    if (article) {
+      setSlug(article.slug);
+      setTitle(article.title);
+      setContent(article.content);
+      setCategory(article.category);
+      setCoverImage(article.coverImage);
+      setTags(article.tags);
+      const formattedDate = new Date(article.date).toISOString().split("T")[0];
+      setDate(formattedDate);
+    }
+  }, [article]);
 
   const handleInputChange = (e) => {
     setTagInputValue(e.target.value);
@@ -84,9 +133,23 @@ const AddArticle = () => {
 
   useEffect(() => {
     if (slug) {
+      if (slug === slugid) {
+        setSlugAvailable(true);
+        return;
+      }
       debouncedCheckSlugAvailability(slug);
     }
   }, [slug, debouncedCheckSlugAvailability]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (article?.error) {
+    notify(article?.message);
+    return (
+      <div className="font-bold text-4xl text-center p-4 text-red-700">
+        {article?.message ? article.message : "Error loading article"}
+      </div>
+    );
+  }
 
   const handleSave = async () => {
     let body = {};
@@ -113,13 +176,14 @@ const AddArticle = () => {
     setLoading(true);
     // API call to save the article
     try {
-      const res = await API.post(`/api/v1/article/admin`, body, {
+      const res = await API.patch(`/api/v1/article/${slugid}`, body, {
         headers: {
           Authorization: `Bearer ${userid}`,
         },
       });
       console.log(res.data);
       notify("Article saved successfully");
+      navigate("/admin/articles");
     } catch (err) {
       console.log(err);
       setErrorMessage("Error saving article");
@@ -168,11 +232,14 @@ const AddArticle = () => {
           placeholder="eg. my-first-article or nirf-ranking-2023"
         />
         <p className="mt-1 text-sm text-red-800">
-          {slug && (
+          {slug && slug !== slugid && (
             <>
               <span className="font-medium">Slug availability</span>{" "}
               {slugAvailable ? "✅" : "❌"}
             </>
+          )}
+          {slug === slugid && (
+            <span className="font-medium">Slug is same as the original</span>
           )}
         </p>
       </div>
@@ -398,7 +465,7 @@ const AddArticle = () => {
         >
           Content Editor
         </label>
-        {!modalIsOpen && (
+        {!modalIsOpen && content && (
           <Editor onChange={setContent} initialContent={content} />
         )}
       </div>

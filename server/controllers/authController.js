@@ -3,6 +3,8 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const sendmail = require("../utils/nodemailer");
 
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 // CRUD operations for users
 // Google login/signup - googleLoginSignup
 // Signup - signup
@@ -13,31 +15,34 @@ const sendmail = require("../utils/nodemailer");
 // Reset password - resetPassword
 
 exports.googleLoginSignup = catchAsync(async (req, res, next) => {
-  const { email, name, profileImage, access_token } = req.body;
-  if (!email || !name) {
-    return next(new AppError("Please provide email and name", 400));
-  }
+  const { token } = req.body;
 
-  // validate access_token google
-  const response = await fetch(
-    `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${access_token}`
-  );
-  const data = await response.json();
-  console.log(data);
-  if (data.error) {
-    return next(new AppError("Invalid access token", 400));
-  }
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
 
-  let user = await User.findOne({ email });
-  if (!user) {
-    password = email + "&" + process.env.GoogleAuthPassword;
-    user = await User.create({ email, name, profileImage, password });
-  } else {
-    user.name = name;
-    user.profileImage = profileImage;
-    await user.save();
+    // Extract user details
+    const email = payload["email"];
+    const name = payload["name"];
+    const profileImage = payload["picture"];
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      password = email + "&" + process.env.GoogleAuthPassword;
+      user = await User.create({ email, name, profileImage, password });
+    } else {
+      user.name = name;
+      user.profileImage = profileImage;
+      await user.save();
+    }
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.error("Error with google login", error);
+    return next(new AppError("Error with google login", 400));
   }
-  return res.status(200).json({ user });
 });
 
 exports.signup = catchAsync(async (req, res) => {
@@ -97,7 +102,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const message = `
 Dear User,
 
-Did you forget your password? No worries! Simply submit the following token along with your new password to reset it:
+Did you forget your password? No worries! Simply submit the following code along with your new password to reset it:
 
 Token: ${resetToken}
 
@@ -109,7 +114,7 @@ Oracle Team
 
   await sendmail({
     email: user.email,
-    subject: "Your password reset token (valid for 10 min)",
+    subject: "Your password reset code (valid for 10 min)",
     message,
   });
 
@@ -120,8 +125,13 @@ Oracle Team
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  const { token, password } = req.body;
+  const { email, token, password } = req.body;
+
+  if (!email || !token || !password) {
+    return next(new AppError("Please provide email, token and password", 400));
+  }
   const user = await User.findOne({
+    email,
     resetPasswordToken: token,
     passwordresetexpired: { $gt: Date.now() },
   });

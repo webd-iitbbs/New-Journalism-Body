@@ -1,0 +1,117 @@
+import React, { createContext, useState, useContext, useEffect } from "react";
+import CryptoJS from "crypto-js";
+import { API } from "../utils/API";
+
+const AuthContext = createContext({
+  isLoggedIn: false,
+  isAdmin: false,
+  userId: null,
+  name: "",
+  email: "",
+  imageUrl: "",
+  setIsLoggedIn: () => {},
+  setName: () => {},
+  setUserId: () => {},
+  setEmail: () => {},
+  setImageUrl: () => {},
+  clearAuth: () => {},
+});
+
+const encryptData = (data) => {
+  return CryptoJS.AES.encrypt(
+    JSON.stringify(data),
+    "your-secret-key#oracle2024"
+  ).toString();
+};
+
+const decryptData = (ciphertext) => {
+  const bytes = CryptoJS.AES.decrypt(ciphertext, "your-secret-key#oracle2024");
+  return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+};
+
+export const AuthProvider = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+
+  useEffect(() => {
+    const loadAuthData = () => {
+      const storedData = localStorage.getItem("authData");
+      if (storedData) {
+        const decryptedData = decryptData(storedData);
+        if (decryptedData.email !== "") setIsLoggedIn(true);
+        setName(decryptedData.name || "");
+        setUserId(decryptedData.userId || null);
+        setEmail(decryptedData.email || "");
+        setImageUrl(decryptedData.imageUrl || "");
+      }
+    };
+
+    loadAuthData();
+  }, []);
+
+  useEffect(() => {
+    const saveAuthData = () => {
+      const authData = { name, email, userId, imageUrl };
+      localStorage.setItem("authData", encryptData(authData));
+    };
+
+    saveAuthData();
+  }, [name, email, userId, imageUrl]);
+
+  useEffect(() => {
+    if (isLoggedIn && userId != null) {
+      const verifyEmail = async () => {
+        try {
+          const response = await API.get("/api/v1/admin", {
+            headers: {
+              Authorization: `Bearer ${userId}`,
+            },
+          });
+          console.log(response.data);
+          setIsAdmin(response.data.admin);
+        } catch (error) {
+          console.error("Error verifying email", error);
+        }
+      };
+      verifyEmail();
+    }
+  }, [isLoggedIn, userId]);
+
+  const clearAuth = () => {
+    setName("");
+    setEmail("");
+    setImageUrl("");
+    setIsLoggedIn(false);
+    setIsAdmin(false);
+    setUserId(null);
+    localStorage.removeItem("authData");
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        isLoggedIn,
+        isAdmin,
+        userId,
+        name,
+        email,
+        imageUrl,
+        setIsLoggedIn,
+        setUserId,
+        setName,
+        setEmail,
+        setImageUrl,
+        clearAuth,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+// Custom hook to use the AuthContext
+export const useAuth = () => useContext(AuthContext);

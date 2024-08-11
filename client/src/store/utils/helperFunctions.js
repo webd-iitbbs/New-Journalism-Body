@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 const formatDate = (dateString, formatType) => {
   // Parse the date string into a Date object
   const dateObj = new Date(dateString);
@@ -39,4 +41,6 @@ const formatDate = (dateString, formatType) => {
   // formatType 3: 10/08/2024
 };
 
-export { formatDate };
+const notify = (message, style) => toast(message, { theme: "light", ...style });
+
+export { formatDate, notify };

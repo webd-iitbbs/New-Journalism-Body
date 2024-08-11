@@ -1,0 +1,188 @@
+import React, { useEffect, useState } from "react";
+import { API } from "../../store/utils/API";
+import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
+
+const fetchAllArticle = async (userid) => {
+  try {
+    const response = await API.get(`/api/v1/article/admin`, {
+      headers: {
+        Authorization: `Bearer ${userid}`,
+      },
+    });
+    return response.data.articles;
+  } catch (error) {
+    console.error("Error fetching article", error);
+    error.error = true;
+    return error.response.data;
+  }
+};
+
+const AllArticles = () => {
+  const userid = "66695585e9f7db6efdcf49a3";
+  const [checked, setChecked] = useState([
+    "published",
+    "draft",
+    "archived",
+    "deleted",
+  ]);
+  const [filteredArticles, setFilteredArticles] = useState([]);
+
+  const {
+    data: articles,
+    error,
+    isLoading,
+  } = useQuery(["all articles admin"], () => fetchAllArticle(userid), {
+    enabled: !!userid,
+    retry: false,
+  });
+
+  useEffect(() => {
+    if (articles) {
+      if (checked.length > 0) {
+        setFilteredArticles(
+          articles.filter((article) => checked.includes(article.status))
+        );
+      } else {
+        setFilteredArticles(articles);
+      }
+    }
+  }, [checked, articles]);
+
+  useEffect(() => {
+    if (articles) {
+      setFilteredArticles(articles);
+    }
+  }, [articles]);
+
+  return (
+    <div className="w-full sm:p-4">
+      <Filter checked={checked} setChecked={setChecked} />
+      <div className="flex flex-row flex-wrap gap-4">
+        {filteredArticles &&
+          filteredArticles?.map((article) => <Card article={article} />)}
+      </div>
+    </div>
+  );
+};
+
+const Card = ({ article }) => {
+  return (
+    <div className="max-w-[250px] m-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+      <div className="relative">
+        <img className="rounded-t-lg" src={article.coverImage} alt="ci" />
+        <div className="absolute top-0 right-0 bg-blue-700 text-white px-2 py-1 rounded-bl-lg">
+          {article.status}
+        </div>
+      </div>
+      <div className="p-5">
+        <h5 className="mb-1 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+          {article.title}
+        </h5>
+
+        <p className="mb-1 font-normal text-gray-700 dark:text-gray-400">
+          Slug: {article.slug}
+        </p>
+        <p className="mb-1 font-normal text-gray-700 dark:text-gray-400">
+          {article.category}
+        </p>
+
+        <Link
+          to={`/admin/article/${article.slug}`}
+          className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Read more
+          <svg
+            className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 10"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M1 5h12m0 0L9 1m4 4L9 9"
+            />
+          </svg>
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+const Filter = ({ checked, setChecked }) => {
+  const options = ["published", "draft", "archived", "deleted"];
+  const handleCheckboxChange = (option) => {
+    setChecked((prev) =>
+      prev.includes(option)
+        ? prev.filter((item) => item !== option)
+        : [...prev, option]
+    );
+  };
+  return (
+    <div className="p-2">
+      <button
+        id="dropdownCheckboxButton"
+        data-dropdown-toggle="dropdownDefaultCheckbox"
+        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        type="button"
+      >
+        Filter{" "}
+        <svg
+          className="w-2.5 h-2.5 ms-3"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 10 6"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m1 1 4 4 4-4"
+          />
+        </svg>
+      </button>
+
+      {/* <!-- Dropdown menu --> */}
+      <div
+        id="dropdownDefaultCheckbox"
+        className="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+      >
+        <ul
+          className="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200"
+          aria-labelledby="dropdownCheckboxButton"
+        >
+          {options.map((option, index) => {
+            const isChecked = checked.includes(option);
+            return (
+              <li key={index}>
+                <div className="flex items-center">
+                  <input
+                    id={`checkbox-item-${index}`}
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={() => handleCheckboxChange(option)}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                  />
+                  <label
+                    for="checkbox-item-1"
+                    className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    {option.toLocaleUpperCase()}
+                  </label>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default AllArticles;

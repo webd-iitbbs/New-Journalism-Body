@@ -46,4 +46,11 @@ router
     ArticleController.updateArticle
   );
 
+router
+  .route("/:slug/admin")
+  .get(
+    AdminController.checkIfAdminMiddleware,
+    ArticleController.getArticleAdmin
+  );
+
 module.exports = router;

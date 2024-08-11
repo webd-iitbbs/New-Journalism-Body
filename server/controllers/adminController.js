@@ -9,8 +9,15 @@ const AppError = require("../utils/appError");
 // Add an admin - addAdmin
 
 exports.checkIfAdminMiddleware = catchAsync(async (req, res, next) => {
-  const { _id } = req.body;
-  const user = await User.findById(_id);
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return next(new AppError("Unauthorized, token missing", 401));
+  }
+
+  const token = authHeader.split(" ")[1];
+  const user = await User.findById(token);
+
   if (!user) return next(new AppError("User not found", 404));
 
   const admin = await Admin.findOne({ email: user.email });
@@ -22,8 +29,14 @@ exports.checkIfAdminMiddleware = catchAsync(async (req, res, next) => {
 });
 
 exports.checkIfAdmin = catchAsync(async (req, res, next) => {
-  const { _id } = req.body;
-  const user = await User.findById(_id);
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return next(new AppError("Unauthorized, token missing", 401));
+  }
+
+  const token = authHeader.split(" ")[1];
+  const user = await User.findById(token);
 
   if (!user) return next(new AppError("User not found", 404));
 
@@ -31,22 +44,20 @@ exports.checkIfAdmin = catchAsync(async (req, res, next) => {
   if (!admin) {
     return next(new AppError("You are not authorized", 401));
   }
-  return res.status(200).json({ message: "You are authorized" });
+  return res.status(200).json({ message: "You are authorized", admin: true });
 });
 
 exports.addAdmin = catchAsync(async (req, res, next) => {
   // email of the user to be made an admin
   // userId of the user making the request
 
-  const { email, userId } = req.body;
-  // check if user is already an admin
-  const user = await User.findById(userId);
-  if (!user) {
-    return next(new AppError("User not found", 404));
-  }
-  const ifuserisAdmin = await Admin.findOne({ email: user.email });
-  if (!ifuserisAdmin) return next(new AppError("You are not authorized", 401));
+  const { email } = req.body;
 
-  const admin = await Admin.create({ email, madeBy: user.email });
+  const admin = await Admin.create({ email, madeBy: req.user.email });
   return res.status(201).json({ admin });
+});
+
+exports.getAllAdmins = catchAsync(async (req, res, next) => {
+  const admins = await Admin.find();
+  return res.status(200).json({ admins });
 });

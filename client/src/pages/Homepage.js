@@ -1,12 +1,9 @@
 import React from "react";
-import Alert from "../components/Alert";
+import { useAuth } from "../store/context/LoginContext";
 const Homepage = () => {
-  return (
-    <div className="w-full">
-      Homepage
-      <Alert />
-    </div>
-  );
+  const authCtx = useAuth();
+  console.log(authCtx);
+  return <div className="w-full">Homepage</div>;
 };
 
 export default Homepage;

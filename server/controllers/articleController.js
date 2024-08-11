@@ -20,7 +20,7 @@ async function checkSlugAvailability(slug) {
 }
 
 exports.createArticle = catchAsync(async (req, res, next) => {
-  let { title, content, slug, category, coverImage, tags } = req.body;
+  let { title, content, slug, category, coverImage, tags, date } = req.body;
   if (slug) slug = slug.toLowerCase().split(" ").join("-");
   if (!slug) slug = title.toLowerCase().split(" ").join("-");
 
@@ -28,7 +28,7 @@ exports.createArticle = catchAsync(async (req, res, next) => {
     console.log("Slug already exists");
     return next(new AppError("Slug already exists", 400));
   }
-
+  if (!date) date = new Date();
   const AllArticles = await Article.find();
   const article = await Article.create({
     articleId: AllArticles.length + 1,
@@ -38,6 +38,7 @@ exports.createArticle = catchAsync(async (req, res, next) => {
     category,
     coverImage,
     tags,
+    date,
     addedOrUpdatedBy: [
       {
         userId: req.user._id,
@@ -68,6 +69,15 @@ exports.getArticle = catchAsync(async (req, res, next) => {
   return res.status(200).json({ article });
 });
 
+exports.getArticleAdmin = catchAsync(async (req, res, next) => {
+  const { slug } = req.params;
+  const article = await Article.findOne({ slug });
+  if (!article) {
+    return next(new AppError("Article not found", 404));
+  }
+  return res.status(200).json({ article });
+});
+
 exports.updateStatus = catchAsync(async (req, res, next) => {
   const { slug, status } = req.body;
   const article = await Article.findOneAndUpdate(
@@ -91,7 +101,8 @@ exports.updateStatus = catchAsync(async (req, res, next) => {
 });
 
 exports.checkSlugAvailability = catchAsync(async (req, res) => {
-  const { slug } = req.body;
+  const { slug } = req.query;
+  console.log(slug);
   const article = await Article.find({ slug });
   if (article.length > 0) {
     return res.status(200).json({ available: false });
@@ -125,18 +136,27 @@ exports.changeSlug = catchAsync(async (req, res, next) => {
 
 exports.updateArticle = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
-  const { title, content, category, coverImage, tags } = req.body;
+  const { title, content, category, coverImage, tags, date } = req.body;
   const article = await Article.findOne({ slug }).select("+addedOrUpdatedBy");
 
   if (!article) {
     return next(new AppError("Article not found", 404));
   }
-
+  if (
+    req.body?.slug &&
+    slug != req.body.slug &&
+    !(await checkSlugAvailability(req.body?.slug))
+  ) {
+    console.log("Slug already exists");
+    return next(new AppError("Slug already exists", 400));
+  }
+  if (req.body?.slug) article.slug = req.body.slug;
   if (title) article.title = title;
   if (content) article.content = content;
   if (category) article.category = category;
   if (coverImage) article.coverImage = coverImage;
   if (tags && tags.length > 0) article.tags = tags;
+  if (date) article.date = date;
 
   article.addedOrUpdatedBy.push({
     userId: req.user._id,
