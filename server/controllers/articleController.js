@@ -5,6 +5,7 @@ const AppError = require("../utils/appError");
 // CRUD operations for articles
 // Create an article - createArticle
 // Get all articles - getAllArticles
+// Get latest articles - getPublishArticles
 // Get all published articles - getPublishArticles
 // Get an article - getArticle
 // Change status of an article - updateStatus
@@ -51,7 +52,17 @@ exports.createArticle = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllArticles = catchAsync(async (req, res) => {
-  const articles = await Article.find();
+  const articles = await Article.find().select("+addedOrUpdatedBy").populate({
+    path: "addedOrUpdatedBy.userId",
+    model: "User",
+    select: "name email",
+  });
+  return res.status(200).json({ articles });
+});
+
+exports.getRecentArticles = catchAsync(async (req, res) => {
+  const limit = req.query.limit ? parseInt(req.query.limit) : 5;
+  const articles = await Article.find().sort({ date: -1 }).limit(limit);
   return res.status(200).json({ articles });
 });
 
@@ -188,7 +199,7 @@ exports.searchArticles = catchAsync(async (req, res, next) => {
 
   // Use $and to combine the conditions
   const articles = await Article.find({
-    $and: regexConditions,
+    $or: regexConditions,
     status: "published",
   });
 

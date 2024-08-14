@@ -7,6 +7,9 @@ const AdminController = require("../controllers/adminController");
 // Route to get all published articles
 router.route("/published").get(ArticleController.getPublishArticles);
 
+// Route to get latest articles
+router.route("/recent").get(ArticleController.getRecentArticles);
+
 // Routes for admin actions on articles
 router
   .route("/admin")

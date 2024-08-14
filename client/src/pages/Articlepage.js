@@ -39,7 +39,10 @@ const Articlepage = () => {
   }
 
   return (
-    <div className="p-8 md:p-20 flex flex-col lg:flex-row gap-4">
+    <div
+      className="p-8 md:p-20 flex flex-col lg:flex-row gap-4"
+      style={{ fontFamily: "Arial" }}
+    >
       <div className="w-full lg:w-3/4">
         <div className="flex flex-col md:flex-row gap-4 pb-8 border-b-2 border-black-800">
           <div className="w-full md:w-1/2 aspect-w-1 aspect-h-1">
@@ -72,9 +75,14 @@ const Articlepage = () => {
           </div>
         </div>
         <div
-          dangerouslySetInnerHTML={{ __html: article.content }}
-          className="text-justify mt-8"
-        ></div>
+          className="sun-editor-editable"
+          style={{ backgroundColor: "#f9f4ed" }}
+        >
+          <div
+            dangerouslySetInnerHTML={{ __html: article.content }}
+            className="text-justify mt-8 "
+          ></div>
+        </div>
       </div>
       <div className="w-1/4">
         {[...Array(5)].map((_, index) => (

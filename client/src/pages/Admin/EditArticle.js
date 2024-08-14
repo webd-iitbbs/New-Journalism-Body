@@ -49,7 +49,7 @@ const AddArticle = () => {
 
   const {
     data: article,
-    error,
+    // error,
     isLoading,
   } = useQuery(
     ["article", slugid],
@@ -64,6 +64,10 @@ const AddArticle = () => {
 
   useEffect(() => {
     if (article) {
+      if (article.error) {
+        notify(article.message);
+        return;
+      }
       setSlug(article.slug);
       setTitle(article.title);
       setContent(article.content);
@@ -139,7 +143,7 @@ const AddArticle = () => {
       }
       debouncedCheckSlugAvailability(slug);
     }
-  }, [slug, debouncedCheckSlugAvailability]);
+  }, [slug, debouncedCheckSlugAvailability, slugid]);
 
   if (isLoading) return <div>Loading...</div>;
   if (article?.error) {

@@ -39,5 +39,7 @@ const annoucementSchema = new mongoose.Schema({
   },
 });
 
+annoucementSchema.index({ date: -1 });
+
 const Announcement = mongoose.model("Announcement", annoucementSchema);
 module.exports = Announcement;

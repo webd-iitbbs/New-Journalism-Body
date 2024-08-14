@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { API, baseBackendUrl } from "./API";
 
 const formatDate = (dateString, formatType) => {
   // Parse the date string into a Date object
@@ -41,6 +42,25 @@ const formatDate = (dateString, formatType) => {
   // formatType 3: 10/08/2024
 };
 
+const uploadHandlerServer = async (file: any) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const res = await API.post(`/api/v1/file/upload-file`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    console.log(res.data);
+    const id = res.data.data.id;
+    const url = `${baseBackendUrl}/api/v1/file/${id}`;
+    console.log(url);
+    return url;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
 const notify = (message, style) => toast(message, { theme: "light", ...style });
 
-export { formatDate, notify };
+export { formatDate, notify, uploadHandlerServer };

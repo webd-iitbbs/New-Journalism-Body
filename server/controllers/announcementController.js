@@ -4,12 +4,26 @@ const AppError = require("../utils/appError");
 
 // CRUD OPERATIONS
 // GET ALL ANNOUNCEMENTS -getAnnouncements
+// GET RECENT ANNOUNCEMENTS - getRecentAnnouncements
 // CREATE ANNOUNCEMENT - createAnnouncement
 // UPDATE ANNOUNCEMENT - updateAnnouncement
 // DELETE ANNOUNCEMENT - deleteAnnouncement
 
 exports.getAnnouncements = catchAsync(async (req, res, next) => {
   const announcements = await Announcement.find({ deleted: false });
+  res.status(200).json({
+    status: "success",
+    data: {
+      announcements,
+    },
+    length: announcements.length,
+  });
+});
+
+exports.getRecentAnnouncements = catchAsync(async (req, res, next) => {
+  const announcements = await Announcement.find({ deleted: false })
+    .sort({ createdAt: -1 })
+    .limit(5);
   res.status(200).json({
     status: "success",
     data: {

@@ -20,11 +20,12 @@ exports.checkIfAdminMiddleware = catchAsync(async (req, res, next) => {
 
   if (!user) return next(new AppError("User not found", 404));
 
-  const admin = await Admin.findOne({ email: user.email });
+  const admin = await Admin.findOne({ email: user.email.toLowerCase() });
   if (!admin) {
     return next(new AppError("You are not authorized", 401));
   }
   req.user = user;
+  console.log("User is an admin", user);
   next();
 });
 
@@ -40,7 +41,7 @@ exports.checkIfAdmin = catchAsync(async (req, res, next) => {
 
   if (!user) return next(new AppError("User not found", 404));
 
-  const admin = await Admin.findOne({ email: user.email });
+  const admin = await Admin.findOne({ email: user?.email.toLowerCase() });
   if (!admin) {
     return next(new AppError("You are not authorized", 401));
   }

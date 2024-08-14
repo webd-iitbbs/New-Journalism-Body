@@ -2,14 +2,16 @@ import React, { useState, useEffect, useCallback } from "react";
 import Editor from "../../components/Editor";
 import Modal from "react-modal";
 import { API } from "../../store/utils/API";
-import { notify } from "../../store/utils/helperFunctions";
+import { notify, uploadHandlerServer } from "../../store/utils/helperFunctions";
 import debounce from "lodash/debounce";
 import { useAuth } from "../../store/context/LoginContext";
 
 const AddArticle = () => {
   const authCtx = useAuth();
   const userid = authCtx.userId;
-  const [coverImage, setCoverImage] = useState(null);
+  const [coverImage, setCoverImage] = useState(null); // contains blob of image
+  const [coverImage1, setCoverImage1] = useState(null); // contains image
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const [tags, setTags] = useState([]);
@@ -55,6 +57,7 @@ const AddArticle = () => {
   const handleImageChange = (e) => {
     console.log(e.target.files[0]);
     if (e.target.files && e.target.files[0]) {
+      setCoverImage1(e.target.files[0]);
       const file = URL.createObjectURL(e.target.files[0]);
       setCoverImage(file);
     }
@@ -102,11 +105,20 @@ const AddArticle = () => {
       setErrorMessage("Please fill all the fields");
       return;
     }
+
+    if (coverImage1) {
+      const url = await uploadHandlerServer(coverImage1);
+      if (url) {
+        body.coverImage = url;
+      } else {
+        notify("Error uploading image");
+        return;
+      }
+    }
     body.slug = slug.trim();
     body.title = title.trim();
     body.content = content.trim();
     body.category = category.trim();
-    body.coverImage = coverImage.trim();
     body.tags = tags;
     body.date = new Date(date).toISOString();
     console.log(body);

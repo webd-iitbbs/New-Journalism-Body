@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from "react";
 import SunEditor from "suneditor-react";
 import { font, video, table, list, image, formatBlock, fontSize, fontColor, hiliteColor, align, lineHeight, horizontalRule, template, link } from 'suneditor/src/plugins'
 
-import { API } from "../store/utils/API";
+import { API, baseBackendUrl } from "../store/utils/API";
 import "suneditor/dist/css/suneditor.min.css";
 
 const MySunEditor = ({
@@ -21,11 +21,13 @@ const MySunEditor = ({
         formData.append("file", file);
 
         try {
-            const res = await API.post(`/api/v1/fileupload`, formData, {
+            const res = await API.post(`/api/v1/file/upload-file`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
+            console.log(res.data);
             const id = res.data.data.id;
-            const url = `https://drive.google.com/thumbnail?id=${id}`;
+            const url = `${baseBackendUrl}/api/v1/file/${id}`;
+            console.log(url);
             return url;
         } catch (err) {
             console.error(err);

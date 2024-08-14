@@ -75,11 +75,12 @@ export const AuthProvider = ({ children }) => {
           setIsAdmin(response.data.admin);
         } catch (error) {
           console.error("Error verifying email", error);
+          setIsAdmin(false);
         }
       };
       verifyEmail();
     }
-  }, [isLoggedIn, userId]);
+  }, [isLoggedIn, userId, email]);
 
   const clearAuth = () => {
     setName("");

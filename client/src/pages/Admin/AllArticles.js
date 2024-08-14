@@ -2,6 +2,12 @@ import React, { useEffect, useState } from "react";
 import { API } from "../../store/utils/API";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../store/context/LoginContext";
+import { notify } from "../../store/utils/helperFunctions";
+import { Table, Button, Tag } from "antd";
+import { formatDate } from "../../store/utils/helperFunctions";
+
+import PuffLoader from "react-spinners/PuffLoader";
 
 const fetchAllArticle = async (userid) => {
   try {
@@ -19,7 +25,8 @@ const fetchAllArticle = async (userid) => {
 };
 
 const AllArticles = () => {
-  const userid = "66695585e9f7db6efdcf49a3";
+  const authCtx = useAuth();
+  const userid = authCtx.userId;
   const [checked, setChecked] = useState([
     "published",
     "draft",
@@ -27,10 +34,11 @@ const AllArticles = () => {
     "deleted",
   ]);
   const [filteredArticles, setFilteredArticles] = useState([]);
+  const [mode, setMode] = useState("table"); // default or table
 
   const {
     data: articles,
-    error,
+    // error,
     isLoading,
   } = useQuery(["all articles admin"], () => fetchAllArticle(userid), {
     enabled: !!userid,
@@ -39,6 +47,9 @@ const AllArticles = () => {
 
   useEffect(() => {
     if (articles) {
+      if (articles.error) {
+        return notify(articles.message);
+      }
       if (checked.length > 0) {
         setFilteredArticles(
           articles.filter((article) => checked.includes(article.status))
@@ -57,11 +68,42 @@ const AllArticles = () => {
 
   return (
     <div className="w-full sm:p-4">
-      <Filter checked={checked} setChecked={setChecked} />
-      <div className="flex flex-row flex-wrap gap-4">
-        {filteredArticles &&
-          filteredArticles?.map((article) => <Card article={article} />)}
+      <div className="w-[200px] mb-4 flex justify-between items-center">
+        <Button
+          onClick={() => setMode("default")}
+          type={mode === "default" ? "default" : "text"}
+        >
+          Cards View
+        </Button>
+        <Button
+          onClick={() => setMode("table")}
+          type={mode === "table" ? "default" : "text"}
+        >
+          Table View
+        </Button>
       </div>
+
+      <div className="p-4 font-medium">
+        Only Published article will be shown to normal user
+      </div>
+
+      {isLoading && (
+        <div className="flex justify-center items-center h-96 flex-grow">
+          <PuffLoader color="#f1c40f" loading={isLoading} size={150} />
+        </div>
+      )}
+      {mode === "default" && (
+        <>
+          <Filter checked={checked} setChecked={setChecked} />
+
+          <div className="flex flex-row flex-wrap gap-4">
+            {filteredArticles.length > 0 &&
+              filteredArticles?.map((article) => <Card article={article} />)}
+          </div>
+        </>
+      )}
+
+      {mode === "table" && <ArticleTable articles={articles} />}
     </div>
   );
 };
@@ -114,7 +156,9 @@ const Card = ({ article }) => {
 };
 
 const Filter = ({ checked, setChecked }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const options = ["published", "draft", "archived", "deleted"];
+
   const handleCheckboxChange = (option) => {
     setChecked((prev) =>
       prev.includes(option)
@@ -122,11 +166,16 @@ const Filter = ({ checked, setChecked }) => {
         : [...prev, option]
     );
   };
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <div className="p-2">
+    <div className="relative p-2">
       <button
         id="dropdownCheckboxButton"
-        data-dropdown-toggle="dropdownDefaultCheckbox"
+        onClick={handleToggle}
         className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         type="button"
       >
@@ -140,18 +189,20 @@ const Filter = ({ checked, setChecked }) => {
         >
           <path
             stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
             d="m1 1 4 4 4-4"
           />
         </svg>
       </button>
 
-      {/* <!-- Dropdown menu --> */}
+      {/* Dropdown menu */}
       <div
         id="dropdownDefaultCheckbox"
-        className="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+        className={`absolute z-10 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 ${
+          isOpen ? "block" : "hidden"
+        }`}
       >
         <ul
           className="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200"
@@ -170,7 +221,7 @@ const Filter = ({ checked, setChecked }) => {
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                   />
                   <label
-                    for="checkbox-item-1"
+                    htmlFor={`checkbox-item-${index}`}
                     className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >
                     {option.toLocaleUpperCase()}
@@ -181,6 +232,129 @@ const Filter = ({ checked, setChecked }) => {
           })}
         </ul>
       </div>
+    </div>
+  );
+};
+
+const ArticleTable = ({ articles }) => {
+  const [articleswithKey, setArticleswithKey] = useState(null);
+
+  useEffect(() => {
+    if (articles) {
+      articles.forEach((article, index) => {
+        article.key = index;
+      });
+      setArticleswithKey(articles);
+    }
+  }, [articles]);
+
+  if (!articles) return null;
+
+  const columns = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+      sorter: (a, b) => a.title.localeCompare(b.title),
+    },
+    {
+      title: "Date",
+      dataIndex: "date",
+      key: "date",
+      sorter: (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+      render: (date) => formatDate(date, 2),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      filters: [
+        { text: "Published", value: "published" },
+        { text: "Draft", value: "draft" },
+        { text: "Archived", value: "archived" },
+        { text: "Deleted", value: "deleted" },
+      ],
+      onFilter: (value, record) => record.status.includes(value),
+    },
+    {
+      title: "Slug",
+      dataIndex: "slug",
+      key: "slug",
+    },
+    {
+      title: "Tags",
+      dataIndex: "tags",
+      key: "tags",
+      render: (tags) => (
+        <>
+          {tags.map((tag) => (
+            <Tag key={tag}>{tag}</Tag>
+          ))}
+        </>
+      ),
+    },
+    {
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Link to={`/admin/article/${record.slug}`} className="text-blue-700">
+          Read More
+        </Link>
+      ),
+    },
+  ];
+
+  const expandedRowRender = (record) => {
+    const innerColumns = [
+      {
+        title: "Name",
+        dataIndex: ["userId", "name"],
+        key: "name",
+      },
+      {
+        title: "Modification",
+        dataIndex: "modification",
+        key: "modification",
+      },
+      {
+        title: "Date",
+        dataIndex: "date",
+        key: "date",
+        render: (date) => formatDate(date, 2),
+      },
+      {
+        title: "Email",
+        dataIndex: ["userId", "email"],
+        key: "email",
+      },
+    ];
+
+    return (
+      <Table
+        columns={innerColumns}
+        dataSource={record.addedOrUpdatedBy}
+        pagination={false}
+      />
+    );
+  };
+
+  return (
+    <div className="p-4">
+      <Table
+        columns={columns}
+        dataSource={articleswithKey}
+        expandable={{
+          expandedRowRender: expandedRowRender,
+          rowExpandable: (record) => record.addedOrUpdatedBy.length > 0,
+        }}
+        pagination={{ pageSize: 20 }}
+        scroll={{ x: "max-content" }}
+      />
     </div>
   );
 };

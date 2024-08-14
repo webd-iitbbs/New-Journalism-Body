@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const addedOrUpdatedBySchema = new mongoose.Schema({
   userId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   },
   date: {
     type: Date,
@@ -51,7 +52,6 @@ const articleSchema = new mongoose.Schema({
   },
   updatedDate: {
     type: Date,
-    default: Date.now,
   },
   status: {
     type: String,
@@ -59,7 +59,8 @@ const articleSchema = new mongoose.Schema({
     default: "draft",
   },
   upVotes: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "User",
   },
   addedOrUpdatedBy: {
     type: [addedOrUpdatedBySchema],
@@ -71,6 +72,10 @@ articleSchema.pre("save", function (next) {
   this.updatedDate = Date.now();
   next();
 });
+
+articleSchema.index({ date: -1 }); // Optimizes queries sorting by date
+articleSchema.index({ status: 1, date: -1 }); // Compound index for status and date queries
+articleSchema.index({ title: "text", content: "text", tags: "text" }); // Full-text search index
 
 const Article = mongoose.model("Article", articleSchema);
 module.exports = Article;

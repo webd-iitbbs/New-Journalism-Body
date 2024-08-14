@@ -25,7 +25,7 @@ exports.googleLoginSignup = catchAsync(async (req, res, next) => {
     const payload = ticket.getPayload();
 
     // Extract user details
-    const email = payload["email"];
+    const email = payload["email"].toLowerCase();
     const name = payload["name"];
     const profileImage = payload["picture"];
 
@@ -50,7 +50,12 @@ exports.signup = catchAsync(async (req, res) => {
   if (!email || !password || !name) {
     return next(new AppError("Please provide email, password and name", 400));
   }
-  const user = await User.create({ email, password, name, profileImage });
+  const user = await User.create({
+    email: email.toLowerCase(),
+    password,
+    name,
+    profileImage,
+  });
   return res.status(201).json({ user });
 });
 
@@ -59,7 +64,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!email || !password) {
     return next(new AppError("Please provide email and password", 400));
   }
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email: email.toLowerCase() });
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("Invalid email or password", 401));
   }

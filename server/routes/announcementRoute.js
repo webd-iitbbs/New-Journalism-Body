@@ -12,6 +12,8 @@ router
     AnnouncementController.createAnnouncement
   );
 
+router.route("/recent").get(AnnouncementController.getRecentAnnouncements);
+
 router
   .route("/:id")
   .patch(
