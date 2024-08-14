@@ -30,9 +30,7 @@ exports.createArticle = catchAsync(async (req, res, next) => {
     return next(new AppError("Slug already exists", 400));
   }
   if (!date) date = new Date();
-  const AllArticles = await Article.find();
   const article = await Article.create({
-    articleId: AllArticles.length + 1,
     slug,
     title,
     content,
