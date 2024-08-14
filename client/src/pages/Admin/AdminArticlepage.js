@@ -6,6 +6,7 @@ import { useAuth } from "../../store/context/LoginContext";
 import { useQuery } from "react-query";
 import "suneditor/dist/css/suneditor.min.css";
 import PuffLoader from "react-spinners/PuffLoader";
+import Comment from "../../components/Comment";
 
 const fetchArticle = async (slug, userid) => {
   try {
@@ -63,74 +64,83 @@ const Articlepage = () => {
   }
 
   return (
-    <div className="p-8 md:p-20 flex flex-col lg:flex-row gap-4">
-      <div className="w-full lg:w-3/4">
-        <div className="flex flex-row py-4">
-          <div>
-            <DropDown
-              article={article}
-              status={articleStatus}
-              setArticleStatus={setArticleStatus}
-            />
-          </div>
-          <div className="flex-grow" />
-          <div
-            className="rounded-lg bg-blue-500 text-white max-w-24 px-2 py-1 text-center cursor-pointer"
-            onClick={() => navigate("/admin/edit-article/" + article?.slug)}
-          >
-            Edit
-          </div>
-        </div>
-        <div className="flex flex-col md:flex-row gap-4 pb-8 border-b-2 border-black-800">
-          <div className="w-full md:w-1/2 aspect-w-1 aspect-h-1">
-            <img
-              src={article?.coverImage}
-              alt="Cover pic"
-              className=" object-cover rounded-lg"
-            />
-          </div>
-          <div className="w-full flex flex-col md:w-1/2">
-            <div className="text-lg mb-2">
-              {article?.date && formatDate(article?.date, 1)}
+    <div
+      className="p-8 md:p-20 flex flex-col gap-4"
+      style={{ fontFamily: "Arial" }}
+    >
+      <div className="flex flex-col lg:flex-row gap-4">
+        <div className="w-full lg:w-3/4">
+          <div className="flex flex-row py-4">
+            <div>
+              <DropDown
+                article={article}
+                status={articleStatus}
+                setArticleStatus={setArticleStatus}
+              />
             </div>
-            <div className="text-4xl md:text-5xl/[55px] font-bold mb-2">
-              {article?.title}
+            <div className="flex-grow" />
+            <div
+              className="rounded-lg bg-blue-500 text-white max-w-24 px-2 py-1 text-center cursor-pointer"
+              onClick={() => navigate("/admin/edit-article/" + article?.slug)}
+            >
+              Edit
             </div>
+          </div>
+          <div className="flex flex-col md:flex-row gap-4 pb-8 border-b-2 border-black-800">
+            <div className="w-full md:w-1/2 aspect-w-1 aspect-h-1">
+              <img
+                src={article?.coverImage}
+                alt="Cover pic"
+                className=" object-cover rounded-lg"
+              />
+            </div>
+            <div className="w-full flex flex-col md:w-1/2">
+              <div className="text-lg mb-2">
+                {article?.date && formatDate(article?.date, 1)}
+              </div>
+              <div className="text-4xl md:text-5xl/[55px] font-bold mb-2">
+                {article?.title}
+              </div>
 
-            <div className="flex-grow"></div>
-            <div className="flex flex-wrap">
-              {article?.tags &&
-                article.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="text-md bg-[#af695c] text-white px-3 py-1 rounded-full mr-2 mt-2"
-                  >
-                    #{tag}
-                  </span>
-                ))}
+              <div className="flex-grow"></div>
+              <div className="flex flex-wrap">
+                {article?.tags &&
+                  article.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="text-md bg-[#af695c] text-white px-3 py-1 rounded-full mr-2 mt-2"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          className="sun-editor-editable"
-          style={{ backgroundColor: "#f9f4ed" }}
-        >
           <div
-            dangerouslySetInnerHTML={{ __html: article?.content }}
-            className="text-justify mt-8"
-          ></div>
+            className="sun-editor-editable"
+            style={{ backgroundColor: "#f9f4ed" }}
+          >
+            <div
+              dangerouslySetInnerHTML={{ __html: article?.content }}
+              className="text-justify mt-8"
+            ></div>
+          </div>
+        </div>
+        <div className="w-1/4">
+          {[...Array(5)].map((_, index) => (
+            <div className="w-full flex flex-row m-4">
+              <div
+                key={index}
+                className="w-20 h-16 bg-gray-200 rounded-lg animate-pulse"
+              />
+              <div className="w-full bg-red-300 rounded-r-lg">hi </div>
+            </div>
+          ))}
         </div>
       </div>
-      <div className="w-1/4">
-        {[...Array(5)].map((_, index) => (
-          <div className="w-full flex flex-row m-4">
-            <div
-              key={index}
-              className="w-20 h-16 bg-gray-200 rounded-lg animate-pulse"
-            />
-            <div className="w-full bg-red-300 rounded-r-lg">hi </div>
-          </div>
-        ))}
+
+      <div className="w-full">
+        <Comment articleId={article?._id} />
       </div>
     </div>
   );

@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../store/context/LoginContext";
+import { VscListSelection } from "react-icons/vsc";
+import { RxHamburgerMenu } from "react-icons/rx";
+
 const Navbar = () => {
   const location = useLocation();
   const [active, setActive] = useState(location.pathname);
+  const [isOpen, setIsOpen] = useState(false); // State for hamburger menu
   const authCtx = useAuth();
 
   const routes = [
@@ -14,39 +18,103 @@ const Navbar = () => {
     { path: "/opinions", name: "Opinions" },
     !authCtx.isLoggedIn ? { path: "/login", name: "Log In" } : null,
   ].filter(Boolean);
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [active, location.pathname]);
+
   return (
     <nav
       className="sticky top-0 z-50 bg-[#f9f4ed] p-4 border-b-2 border-[#d8d6d2]"
       style={{ fontFamily: "HelveticaNeue, Arial, sans-serif" }}
     >
       <div className="container mx-auto flex justify-between items-center">
+        {/* Logo */}
         <div className="text-black text-3xl font-semibold">
           <Link to="/">ORACLE</Link>
         </div>
-        <ul className="flex space-x-4 relative items-center text-lg">
-          <li key="admin">
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex space-x-4 relative items-center text-lg">
+          <ul className="flex space-x-4">
+            <li key="admin">
+              <AdminRoutes />
+            </li>
+            {routes.map((path) => (
+              <motion.li
+                key={path.path}
+                className="relative"
+                whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
+              >
+                <Link
+                  to={path.path}
+                  className={`text-black font-medium pb-1 relative`}
+                  onClick={() => setActive(path.path)}
+                >
+                  {path.name}
+                </Link>
+                {active === path.path && (
+                  <motion.div
+                    className="absolute bottom-0 left-0 w-full h-[2px] bg-blue-500"
+                    layoutId="underline"
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Mobile Hamburger Menu */}
+        <button
+          className="md:hidden flex items-center justify-center text-black"
+          onClick={handleToggle}
+        >
+          {!isOpen ? (
+            <RxHamburgerMenu size={24} />
+          ) : (
+            <VscListSelection size={24} />
+          )}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : -20 }}
+        transition={{ duration: 0.3 }}
+        className={`${
+          isOpen ? "block" : "hidden"
+        } md:hidden absolute top-16 left-0 w-full bg-[#f9f4ed] border-t-2 border-[#d8d6d2] shadow-lg`}
+      >
+        <ul className="py-4 text-center text-lg">
+          <li
+            key="admin"
+            className="block px-4 py-2 text-black font-medium text-center flex justify-center"
+          >
             <AdminRoutes />
           </li>
           {routes.map((path) => (
-            <li key={path.path} className="relative">
+            <li key={path.path} className="py-2">
               <Link
                 to={path.path}
-                className={`text-black font-medium pb-1 relative`}
-                onClick={() => setActive(path.path)}
+                className={`block px-4 py-2 text-black font-medium`}
+                onClick={() => {
+                  setActive(path.path);
+                  setIsOpen(false); // Close menu on link click
+                }}
               >
                 {path.name}
               </Link>
-              {active === path.path && (
-                <motion.div
-                  className="absolute bottom-0 left-0 w-full h-[2px] bg-blue-500"
-                  layoutId="underline"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
             </li>
           ))}
         </ul>
-      </div>
+      </motion.div>
     </nav>
   );
 };
@@ -73,7 +141,7 @@ const AdminRoutes = () => {
       <button
         id="dropdownNavbarLink"
         onClick={handleToggle}
-        className="flex items-center justify-between text-black font-medium  relative"
+        className="flex items-center justify-between text-black font-medium relative"
       >
         Admin
         <svg
@@ -93,21 +161,24 @@ const AdminRoutes = () => {
         </svg>
       </button>
 
-      <div
+      <motion.div
         id="dropdownNavbar"
-        className={`absolute z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ${
+        className={`absolute z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${
           isOpen ? "block" : "hidden"
         }`}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: isOpen ? 1 : 0, scale: isOpen ? 1 : 0.9 }}
+        transition={{ duration: 0.3 }}
       >
         <ul
-          className="py-2 text-sm text-gray-700 dark:text-gray-400"
+          className="py-2 text-sm text-gray-700"
           aria-labelledby="dropdownNavbarLink"
         >
           {routes.map((route) => (
             <li key={route.path}>
               <Link
                 to={route.path}
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                className="block px-4 py-2 hover:bg-gray-100"
                 onClick={() => setIsOpen(false)} // Close dropdown on link click
               >
                 {route.name}
@@ -115,7 +186,7 @@ const AdminRoutes = () => {
             </li>
           ))}
         </ul>
-      </div>
+      </motion.div>
     </div>
   );
 };

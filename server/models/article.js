@@ -16,9 +16,6 @@ const addedOrUpdatedBySchema = new mongoose.Schema({
 });
 
 const articleSchema = new mongoose.Schema({
-  articleId: {
-    type: Number,
-  },
   slug: {
     // slug is a URL friendly version of the article name
     type: String,

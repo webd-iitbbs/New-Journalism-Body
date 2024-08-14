@@ -21,6 +21,8 @@ const userSchema = new mongoose.Schema({
   },
   profileImage: {
     type: String,
+    default:
+      "https://img.freepik.com/vector-premium/icono-perfil-avatar_188544-4755.jpg?w=360",
   },
   passwordChangedAt: Date,
   resetPasswordToken: {

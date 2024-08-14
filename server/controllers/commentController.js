@@ -17,12 +17,20 @@ exports.createComment = catchAsync(async (req, res) => {
     );
   }
   const comment = await Comment.create({ articleId, content, userId });
-  return res.status(201).json({ comment });
+
+  const populatedComment = await Comment.findById(comment._id).populate({
+    path: "userId", // Field to populate
+    select: "name email profileImage", // Select fields to include from the User model
+  });
+  return res.status(201).json({ comment: populatedComment });
 });
 
 exports.getAllCommentsByArticleId = catchAsync(async (req, res) => {
-  const { articleId } = req.body;
-  const comments = await Comment.find({ articleId, isBlocked: false });
+  const { articleId } = req.query;
+  const comments = await Comment.find({ articleId, isBlocked: false }).populate(
+    "userId",
+    "name email profileImage"
+  );
   return res.status(200).json({ comments });
 });
 
@@ -33,18 +41,19 @@ exports.blockComment = catchAsync(async (req, res, next) => {
     return next(new AppError("Please provide commentId", 400));
   }
 
-  const comment = await Comment.findByIdAndUpdate(
-    commentId,
-    { isBlocked: true },
-    { new: true }
-  );
+  const comment = await Comment.findByIdAndUpdate(commentId, {
+    isBlocked: true,
+  });
   return res.status(200).json({ message: "Comment blocked", comment });
 });
 
 exports.likeOrDislikeComment = catchAsync(async (req, res, next) => {
   const { commentId, userId, like } = req.body;
+
   if (!commentId || !userId || like === undefined) {
-    return next(new AppError("Please provide commentId, userId and like", 400));
+    return next(
+      new AppError("Please provide commentId, userId, and like", 400)
+    );
   }
 
   const comment = await Comment.findById(commentId);
@@ -52,21 +61,21 @@ exports.likeOrDislikeComment = catchAsync(async (req, res, next) => {
     return next(new AppError("Comment not found", 404));
   }
 
-  if (like) {
+  // Update like/dislike arrays
+  if (like === "like") {
     if (!comment.likes.includes(userId)) {
       comment.likes.push(userId);
-      comment.dislikes = comment.dislikes.filter((id) => id !== userId);
-    } else {
-      comment.likes = comment.likes.filter((id) => id !== userId);
     }
-  } else {
+    comment.dislikes = comment.dislikes.filter((id) => id !== userId);
+  } else if (like === "dislike") {
     if (!comment.dislikes.includes(userId)) {
       comment.dislikes.push(userId);
-      comment.likes = comment.likes.filter((id) => id !== userId);
-    } else {
-      comment.dislikes = comment.dislikes.filter((id) => id !== userId);
     }
+    comment.likes = comment.likes.filter((id) => id !== userId);
+  } else {
+    return next(new AppError("Invalid like value", 400));
   }
+
   await comment.save();
   return res.status(200).json({ comment });
 });

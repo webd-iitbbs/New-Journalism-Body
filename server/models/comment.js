@@ -2,11 +2,13 @@ const mongoose = require("mongoose");
 
 const commentSchema = new mongoose.Schema({
   articleId: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Article",
     required: [true, "Please provide article id"],
   },
   userId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: [true, "Please provide user id"],
   },
   content: {
@@ -28,6 +30,8 @@ const commentSchema = new mongoose.Schema({
     type: [String],
   },
 });
+
+commentSchema.index({ articleId: 1, date: -1 });
 
 const Comment = mongoose.model("Comment", commentSchema);
 module.exports = Comment;
