@@ -9,11 +9,11 @@ import { formatDate } from "../../store/utils/helperFunctions";
 
 import PuffLoader from "react-spinners/PuffLoader";
 
-const fetchAllArticle = async (userid) => {
+const fetchAllArticle = async (token) => {
   try {
     const response = await API.get(`/api/v1/article/admin`, {
       headers: {
-        Authorization: `Bearer ${userid}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.data.articles;
@@ -40,10 +40,14 @@ const AllArticles = () => {
     data: articles,
     // error,
     isLoading,
-  } = useQuery(["all articles admin"], () => fetchAllArticle(userid), {
-    enabled: !!userid,
-    retry: false,
-  });
+  } = useQuery(
+    ["all articles admin"],
+    () => fetchAllArticle(authCtx.AccessToken),
+    {
+      enabled: !!authCtx.AccessToken,
+      retry: false,
+    }
+  );
 
   useEffect(() => {
     if (articles) {

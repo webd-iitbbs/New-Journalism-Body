@@ -10,7 +10,8 @@ const AppError = require("../utils/appError");
 // Like or dislike a comment - likeOrDislikeComment
 
 exports.createComment = catchAsync(async (req, res) => {
-  const { articleId, content, userId } = req.body;
+  const userId = req.user._id;
+  const { articleId, content } = req.body;
   if (!articleId || !content || !userId) {
     return next(
       new AppError("Please provide articleId, content and userId", 400)
@@ -27,10 +28,9 @@ exports.createComment = catchAsync(async (req, res) => {
 
 exports.getAllCommentsByArticleId = catchAsync(async (req, res) => {
   const { articleId } = req.query;
-  const comments = await Comment.find({ articleId, isBlocked: false }).populate(
-    "userId",
-    "name email profileImage"
-  );
+  const comments = await Comment.find({ articleId, isBlocked: false })
+    .populate("userId", "name email profileImage")
+    .sort({ date: -1 });
   return res.status(200).json({ comments });
 });
 
@@ -48,7 +48,8 @@ exports.blockComment = catchAsync(async (req, res, next) => {
 });
 
 exports.likeOrDislikeComment = catchAsync(async (req, res, next) => {
-  const { commentId, userId, like } = req.body;
+  const userId = req.user._id;
+  const { commentId, like } = req.body;
 
   if (!commentId || !userId || like === undefined) {
     return next(

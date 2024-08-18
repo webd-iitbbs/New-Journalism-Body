@@ -59,7 +59,7 @@ exports.getAllArticles = catchAsync(async (req, res) => {
 });
 
 exports.getRecentArticles = catchAsync(async (req, res) => {
-  const limit = req.query.limit ? parseInt(req.query.limit) : 5;
+  const limit = req.query.limit ? parseInt(req?.query?.limit) : 5;
   const articles = await Article.find().sort({ date: -1 }).limit(limit);
   return res.status(200).json({ articles });
 });
@@ -211,7 +211,7 @@ exports.searchArticles = catchAsync(async (req, res, next) => {
 });
 exports.upvoteArticle = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
-  const { userId } = req.body;
+  const userId = req.user._id;
 
   // Find the article by its slug
   const article = await Article.findOne({ slug });

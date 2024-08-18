@@ -3,50 +3,43 @@ const User = require("../models/user");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
+const AuthController = require("./authController");
 // CRUD operations for admins
 // Check if user is an admin - checkIfAdmin
 // Check if user is an admin middleware - checkIfAdminMiddleware
 // Add an admin - addAdmin
 
-exports.checkIfAdminMiddleware = catchAsync(async (req, res, next) => {
-  const authHeader = req.headers.authorization;
+exports.checkIfAdminMiddleware = [
+  AuthController.protect, // check if user is logged in
+  catchAsync(async (req, res, next) => {
+    const user = req.user;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return next(new AppError("Unauthorized, token missing", 401));
-  }
+    if (!user) return next(new AppError("User not found", 404));
 
-  const token = authHeader.split(" ")[1];
-  const user = await User.findById(token);
+    const admin = await Admin.findOne({ email: user.email.toLowerCase() });
+    if (!admin) {
+      return next(new AppError("You are not authorized", 401));
+    }
+    req.user = user;
+    console.log("User is an admin", user);
+    next();
+  }),
+];
 
-  if (!user) return next(new AppError("User not found", 404));
+exports.checkIfAdmin = [
+  AuthController.protect, // check if user is logged in
+  catchAsync(async (req, res, next) => {
+    const user = req.user;
 
-  const admin = await Admin.findOne({ email: user.email.toLowerCase() });
-  if (!admin) {
-    return next(new AppError("You are not authorized", 401));
-  }
-  req.user = user;
-  console.log("User is an admin", user);
-  next();
-});
+    if (!user) return next(new AppError("User not found", 404));
 
-exports.checkIfAdmin = catchAsync(async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return next(new AppError("Unauthorized, token missing", 401));
-  }
-
-  const token = authHeader.split(" ")[1];
-  const user = await User.findById(token);
-
-  if (!user) return next(new AppError("User not found", 404));
-
-  const admin = await Admin.findOne({ email: user?.email.toLowerCase() });
-  if (!admin) {
-    return next(new AppError("You are not authorized", 401));
-  }
-  return res.status(200).json({ message: "You are authorized", admin: true });
-});
+    const admin = await Admin.findOne({ email: user?.email.toLowerCase() });
+    if (!admin) {
+      return next(new AppError("You are not authorized", 401));
+    }
+    return res.status(200).json({ message: "You are authorized", admin: true });
+  }),
+];
 
 exports.addAdmin = catchAsync(async (req, res, next) => {
   // email of the user to be made an admin

@@ -17,6 +17,7 @@
     "express": "^4.19.2",
     "google-auth-library": "^9.13.0",
     "googleapis": "^140.0.1",
+    "jsonwebtoken": "^9.0.2",
     "lrucache": "^1.0.3",
     "mongoose": "^8.4.1",
     "morgan": "^1.10.0",

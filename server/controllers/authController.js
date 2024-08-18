@@ -2,9 +2,126 @@ const User = require("../models/user");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const sendmail = require("../utils/nodemailer");
+const jwt = require("jsonwebtoken");
+const { promisify } = require("util");
 
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+const signToken = (id) => {
+  const Accesstoken = jwt.sign(id, process.env.ACCESS_JWT_SECRET, {
+    expiresIn: process.env.ACCESS_JWT_EXPIRES_IN,
+  });
+
+  const Refreshtoken = jwt.sign(id, process.env.REFRESH_JWT_SECRET, {
+    expiresIn: process.env.REFRESH_JWT_EXPIRES_IN,
+  });
+
+  console.log("AccessToken", Accesstoken);
+  console.log("RefreshToken", Refreshtoken);
+  return [Accesstoken, Refreshtoken];
+};
+
+const createSendToken = catchAsync(async (user, statusCode, res) => {
+  user.lastLogin = Date.now();
+  await user.save({ validateBeforeSave: false });
+  const [AccessToken, RefreshToken] = signToken({ id: user._id });
+  // const cookieoptions = {
+  //   expires: new Date(
+  //     Date.now() +
+  //       process.env.ACCESS_JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+  //   ),
+  //   withCredentials: true,
+  //   // httpOnly: true,
+  //   // domain: ".github.io",
+  //   // domain: "localhost",
+  //   // path: "/winter_code_week_2/#/",
+  //   path: "/",
+  //   secure: true,
+  //   sameSite: "None",
+  //   httpOnly: false,
+  // };
+  // // if (process.env.NODE_ENV === "production") cookieoptions.secure = true;
+  // // console.log(cookieoptions);
+  // res.cookie("AccessToken", AccessToken, cookieoptions);
+  // res.cookie("RefreshToken", RefreshToken, cookieoptions);
+  console.log(AccessToken);
+  user.password = undefined;
+  res.status(statusCode).json({
+    status: "success",
+    AccessToken,
+    RefreshToken,
+    data: { user },
+  });
+});
+
+exports.verifyRefreshToken = catchAsync(async (req, res, next) => {
+  let RefreshToken;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    RefreshToken = req.headers.authorization.split(" ")[1];
+  }
+  if (!RefreshToken) {
+    return next(new AppError("you are not logged in", 401));
+  }
+  console.log(RefreshToken, "refresh token");
+  const decoded = await promisify(jwt.verify)(
+    RefreshToken,
+    process.env.REFRESH_JWT_SECRET
+  );
+  const currentUser = await User.findById(decoded.id).select("+password");
+  if (!currentUser) {
+    return next(
+      new AppError("the user belonging to this token does not exist", 401)
+    );
+  }
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError("user recently changed password! please login again", 401)
+    );
+  }
+  req.user = currentUser;
+  createSendToken(currentUser, 200, res);
+});
+
+exports.protect = catchAsync(async (req, res, next) => {
+  // console.log("hello ");
+  let AccessToken;
+  // console.log(req.headers.authorization);
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    AccessToken = req.headers.authorization.split(" ")[1];
+  }
+  if (!AccessToken) {
+    return next(new AppError("you are not logged in", 401));
+  }
+  console.log(AccessToken, "access token");
+
+  const decoded = await promisify(jwt.verify)(
+    AccessToken,
+    process.env.ACCESS_JWT_SECRET
+  );
+
+  const currentUser = await User.findById(decoded.id).select("+password");
+  // console.log(currentUser);
+  if (!currentUser) {
+    return next(
+      new AppError("the user belonging to this token does not exist", 401)
+    );
+  }
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError("user recently changed password! please login again", 401)
+    );
+  }
+  req.user = currentUser;
+  next();
+});
+
 // CRUD operations for users
 // Google login/signup - googleLoginSignup
 // Signup - signup
@@ -38,7 +155,7 @@ exports.googleLoginSignup = catchAsync(async (req, res, next) => {
       user.profileImage = profileImage;
       await user.save();
     }
-    return res.status(200).json({ user });
+    return createSendToken(user, 200, res);
   } catch (error) {
     console.error("Error with google login", error);
     return next(new AppError("Error with google login", 400));
@@ -56,7 +173,7 @@ exports.signup = catchAsync(async (req, res) => {
     name,
     profileImage,
   });
-  return res.status(201).json({ user });
+  return createSendToken(user, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -68,12 +185,11 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("Invalid email or password", 401));
   }
-  return res.status(200).json({ message: "Login successful", user });
+  return createSendToken(user, 200, res);
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const { userId } = req.params;
-  const user = await User.findById(userId);
+  const user = req.user;
   if (!user) {
     return next(new AppError("User not found", 404));
   }
@@ -81,9 +197,8 @@ exports.getUser = catchAsync(async (req, res, next) => {
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const { userId } = req.params;
   const { name, profileImage } = req.body;
-  const user = await User.findById(userId);
+  const user = req.user;
   if (!user) {
     return next(new AppError("User not found", 404));
   }

@@ -3,6 +3,7 @@ const router = express.Router();
 
 const ArticleController = require("../controllers/articleController");
 const AdminController = require("../controllers/adminController");
+const AuthController = require("../controllers/authController");
 
 // Route to get all published articles
 router.route("/published").get(ArticleController.getPublishArticles);
@@ -38,7 +39,9 @@ router
 // search articles
 router.route("/search").get(ArticleController.searchArticles);
 
-router.route("/:slug/upvote").post(ArticleController.upvoteArticle);
+router
+  .route("/:slug/upvote")
+  .post(AuthController.protect, ArticleController.upvoteArticle);
 
 // Routes for specific article operations
 router

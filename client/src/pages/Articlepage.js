@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { API } from "../store/utils/API";
 import { formatDate, notify } from "../store/utils/helperFunctions";
 import "suneditor/dist/css/suneditor.min.css";
@@ -9,6 +9,7 @@ import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 import { MdOutlineChat } from "react-icons/md";
 import { FaShareAlt } from "react-icons/fa";
 import Comment from "../components/Comment";
+import { useAuth } from "../store/context/LoginContext";
 
 const fetchArticle = async (slug) => {
   try {
@@ -22,6 +23,7 @@ const fetchArticle = async (slug) => {
 };
 
 const Articlepage = () => {
+  const authCtx = useAuth();
   const { slug } = useParams();
   const {
     data: article,
@@ -71,6 +73,14 @@ const Articlepage = () => {
       className="p-8 md:p-20 flex flex-col gap-4"
       style={{ fontFamily: "Arial" }}
     >
+      {authCtx.isAdmin && (
+        <Link
+          to={`/admin/article/${slug}`}
+          className="absolute top-20 right-10 hover:text-blue-400 hover:underline"
+        >
+          Go to Admin Article Page
+        </Link>
+      )}
       <div className="flex flex-col lg:flex-row gap-4">
         <div className="w-full lg:w-3/4">
           <div className="flex flex-col md:flex-row gap-4 pb-8 border-b-2 border-black-800">

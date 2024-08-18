@@ -4,12 +4,12 @@ import { notify } from "../../store/utils/helperFunctions";
 import { API } from "../../store/utils/API";
 import { useQuery, useQueryClient } from "react-query";
 
-const fetchAllAdmin = async (userid) => {
-  if (!userid) return;
+const fetchAllAdmin = async (token) => {
+  if (!token) return;
   try {
     const response = await API.get(`/api/v1/admin/all`, {
       headers: {
-        Authorization: `Bearer ${userid}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     console.log(response.data.admins);
@@ -31,8 +31,8 @@ const AddAdmin = () => {
     data: admins,
     error,
     isLoading,
-  } = useQuery(["all admins"], () => fetchAllAdmin(authCtx?.userId), {
-    enabled: !!authCtx?.userId,
+  } = useQuery(["all admins"], () => fetchAllAdmin(authCtx?.AccessToken), {
+    enabled: !!authCtx?.AccessToken,
     retry: false,
     staleTime: 10 * 60 * 1000, // Data is considered fresh for 10 minutes
     cacheTime: 60 * 60 * 1000, // Data is considered stale after 60 minutes
@@ -45,7 +45,7 @@ const AddAdmin = () => {
         { email },
         {
           headers: {
-            Authorization: `Bearer ${authCtx?.userId}`,
+            Authorization: `Bearer ${authCtx?.AccessToken}`,
           },
         }
       );

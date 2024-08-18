@@ -22,13 +22,15 @@ const GoogleLoginPage = () => {
           const resp = await API.post("/api/v1/auth/google-login-signup", {
             token: response.credential,
           });
-          console.log(resp.data.user);
+          console.log(resp.data.data.user);
           notify("Login successful");
           authCtx.setIsLoggedIn(true);
-          authCtx.setName(resp.data.user.name);
-          authCtx.setEmail(resp.data.user.email);
-          authCtx.setUserId(resp.data.user._id);
-          authCtx.setImageUrl(resp.data.user.imageUrl);
+          authCtx.setName(resp.data.data.user.name);
+          authCtx.setEmail(resp.data.data.user.email);
+          authCtx.setUserId(resp.data.data.user._id);
+          authCtx.setImageUrl(resp.data.data.user.imageUrl);
+          authCtx.setAccessToken(resp.data.AccessToken);
+          authCtx.setRefreshToken(resp.data.RefreshToken);
           navigate("/");
         } catch (error) {
           console.error("Error authenticating user", error);
