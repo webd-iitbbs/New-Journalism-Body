@@ -127,7 +127,7 @@ const AddArticle = () => {
     try {
       const res = await API.post(`/api/v1/article/admin`, body, {
         headers: {
-          Authorization: `Bearer ${userid}`,
+          Authorization: `Bearer ${authCtx.AccessToken}`,
         },
       });
       console.log(res.data);

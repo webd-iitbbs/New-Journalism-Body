@@ -29,9 +29,11 @@ const Login = () => {
       notify("Login successful");
 
       authCtx.setIsLoggedIn(true);
-      authCtx.setName(response.data?.user?.name);
+      authCtx.setName(response.data?.data?.user?.name);
       authCtx.setEmail(email);
-      authCtx.setUserId(response.data?.user?._id);
+      authCtx.setUserId(response.data?.data?.user?._id);
+      authCtx.setAccessToken(response.data?.AccessToken);
+      authCtx.setRefreshToken(response.data?.RefreshToken);
       navigate("/");
     } catch (error) {
       console.error("Error logging in", error);

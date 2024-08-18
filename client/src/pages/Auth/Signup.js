@@ -41,7 +41,9 @@ const Signup = () => {
       authCtx.setIsLoggedIn(true);
       authCtx.setName(name);
       authCtx.setEmail(email);
-      authCtx.setUserId(response.data?.user?._id);
+      authCtx.setUserId(response.data?.data?.user?._id);
+      authCtx.setAccessToken(response.data?.AccessToken);
+      authCtx.setRefreshToken(response.data.RefreshToken);
       navigate("/");
     } catch (error) {
       console.error("Error signing up", error);

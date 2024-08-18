@@ -5,6 +5,7 @@ import { useAuth } from '../store/context/LoginContext';
 import { useQuery } from 'react-query';
 import { AiOutlineLike, AiTwotoneLike, AiOutlineDislike, AiTwotoneDislike } from "react-icons/ai";
 import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
+
 // Component for individual comment
 const SingleComment = ({ comment, userId, setAllComments, authCtx }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -27,7 +28,11 @@ const SingleComment = ({ comment, userId, setAllComments, authCtx }) => {
         };
         console.log(data);
         try {
-            const resp = await API.patch('/api/v1/comment/like-dislike', data);
+            const resp = await API.patch('/api/v1/comment/like-dislike', data, {
+                headers: {
+                    Authorization: "Bearer " + authCtx.AccessToken,
+                }
+            });
             console.log(resp.data);
             setAllComments(prev => prev.map(c => {
                 if (c._id === comment._id) {
@@ -58,7 +63,7 @@ const SingleComment = ({ comment, userId, setAllComments, authCtx }) => {
         try {
             const resp = await API.post('/api/v1/comment/admin', { commentId: comment._id }, {
                 headers: {
-                    Authorization: `Bearer ${authCtx.userId}`
+                    Authorization: `Bearer ${authCtx.AccessToken}`
                 }
             });
             console.log(resp.data);
@@ -99,7 +104,7 @@ const SingleComment = ({ comment, userId, setAllComments, authCtx }) => {
                     />
                     <div>
                         <p className="text-sm font-semibold text-gray-900">{comment?.userId?.name}</p>
-                        <p className="text-sm text-gray-600">{formatDate(comment.date, 1)}</p>
+                        <p className="text-sm text-gray-600">{formatDate(comment.date, 3)}</p>
                     </div>
                 </div>
                 {authCtx.isAdmin && <button
@@ -206,7 +211,11 @@ const Comment = ({ articleId }) => {
             userId: authCtx.userId
         };
         try {
-            const resp = await API.post('/api/v1/comment', comment);
+            const resp = await API.post('/api/v1/comment', comment, {
+                headers: {
+                    Authorization: "Bearer " + authCtx.AccessToken,
+                }
+            });
             console.log(resp.data);
             notify('Comment posted successfully', 'success');
             setInputComment('');

@@ -9,6 +9,10 @@ const AuthContext = createContext({
   name: "",
   email: "",
   imageUrl: "",
+  AccessToken: "",
+  RefreshToken: "",
+  setAccessToken: () => {},
+  setRefreshToken: () => {},
   setIsLoggedIn: () => {},
   setName: () => {},
   setUserId: () => {},
@@ -36,6 +40,8 @@ export const AuthProvider = ({ children }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [AccessToken, setAccessToken] = useState("");
+  const [RefreshToken, setRefreshToken] = useState("");
 
   useEffect(() => {
     const loadAuthData = () => {
@@ -47,6 +53,8 @@ export const AuthProvider = ({ children }) => {
         setUserId(decryptedData.userId || null);
         setEmail(decryptedData.email || "");
         setImageUrl(decryptedData.imageUrl || "");
+        setAccessToken(decryptedData.AccessToken || "");
+        setRefreshToken(decryptedData.RefreshToken || "");
       }
     };
 
@@ -55,20 +63,27 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const saveAuthData = () => {
-      const authData = { name, email, userId, imageUrl };
+      const authData = {
+        name,
+        email,
+        userId,
+        imageUrl,
+        AccessToken,
+        RefreshToken,
+      };
       localStorage.setItem("authData", encryptData(authData));
     };
 
     saveAuthData();
-  }, [name, email, userId, imageUrl]);
+  }, [name, email, userId, imageUrl, AccessToken, RefreshToken]);
 
   useEffect(() => {
-    if (isLoggedIn && userId != null) {
+    if (isLoggedIn && AccessToken !== "") {
       const verifyEmail = async () => {
         try {
           const response = await API.get("/api/v1/admin", {
             headers: {
-              Authorization: `Bearer ${userId}`,
+              Authorization: `Bearer ${AccessToken}`,
             },
           });
           console.log(response.data);
@@ -80,7 +95,7 @@ export const AuthProvider = ({ children }) => {
       };
       verifyEmail();
     }
-  }, [isLoggedIn, userId, email]);
+  }, [isLoggedIn, userId, email, AccessToken]);
 
   const clearAuth = () => {
     setName("");
@@ -89,6 +104,8 @@ export const AuthProvider = ({ children }) => {
     setIsLoggedIn(false);
     setIsAdmin(false);
     setUserId(null);
+    setAccessToken("");
+    setRefreshToken("");
     localStorage.removeItem("authData");
   };
 
@@ -101,6 +118,10 @@ export const AuthProvider = ({ children }) => {
         name,
         email,
         imageUrl,
+        AccessToken,
+        RefreshToken,
+        setAccessToken,
+        setRefreshToken,
         setIsLoggedIn,
         setUserId,
         setName,

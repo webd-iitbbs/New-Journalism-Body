@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { API } from "../../store/utils/API";
 import { formatDate, notify } from "../../store/utils/helperFunctions";
 import { useAuth } from "../../store/context/LoginContext";
@@ -8,11 +8,11 @@ import "suneditor/dist/css/suneditor.min.css";
 import PuffLoader from "react-spinners/PuffLoader";
 import Comment from "../../components/Comment";
 
-const fetchArticle = async (slug, userid) => {
+const fetchArticle = async (slug, token) => {
   try {
     const response = await API.get(`/api/v1/article/${slug}/admin`, {
       headers: {
-        Authorization: `Bearer ${userid}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.data.article;
@@ -32,12 +32,16 @@ const Articlepage = () => {
     data: article,
     // error,
     isLoading,
-  } = useQuery(["article", slug], () => fetchArticle(slug, authCtx.userId), {
-    retry: false,
-    enabled: !!slug && !!authCtx.userId,
-    staleTime: 10 * 60 * 1000, // Data is considered fresh for 10 minutes
-    cacheTime: 60 * 60 * 1000, // Data is considered stale after 60 minutes
-  });
+  } = useQuery(
+    ["article", slug],
+    () => fetchArticle(slug, authCtx.AccessToken),
+    {
+      retry: false,
+      enabled: !!slug && !!authCtx.userId,
+      staleTime: 10 * 60 * 1000, // Data is considered fresh for 10 minutes
+      cacheTime: 60 * 60 * 1000, // Data is considered stale after 60 minutes
+    }
+  );
 
   useEffect(() => {
     if (article) {
@@ -68,6 +72,12 @@ const Articlepage = () => {
       className="p-8 md:p-20 flex flex-col gap-4"
       style={{ fontFamily: "Arial" }}
     >
+      <Link
+        to={`/article/${slug}`}
+        className="absolute top-20 right-10 hover:text-blue-400 hover:underline"
+      >
+        Go to normal user Article Page
+      </Link>
       <div className="flex flex-col lg:flex-row gap-4">
         <div className="w-full lg:w-3/4">
           <div className="flex flex-row py-4">
@@ -171,7 +181,7 @@ const DropDown = ({ article, status, setArticleStatus }) => {
         { slug: article.slug, status },
         {
           headers: {
-            Authorization: `Bearer ${authCtx?.userId}`,
+            Authorization: `Bearer ${authCtx?.AccessToken}`,
           },
         }
       );

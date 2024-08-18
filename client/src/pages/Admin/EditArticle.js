@@ -8,12 +8,12 @@ import { useAuth } from "../../store/context/LoginContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 
-const fetchArticle = async (slug, userid) => {
-  if (!slug || !userid) return {};
+const fetchArticle = async (slug, token) => {
+  if (!slug || !token) return {};
   try {
     const response = await API.get(`/api/v1/article/${slug}/admin`, {
       headers: {
-        Authorization: `Bearer ${userid}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.data.article;
@@ -53,10 +53,10 @@ const AddArticle = () => {
     isLoading,
   } = useQuery(
     ["article", slugid],
-    () => fetchArticle(slugid, authCtx.userId),
+    () => fetchArticle(slugid, authCtx.AccessToken),
     {
       retry: 2,
-      enabled: !!slugid && !!authCtx.userId,
+      enabled: !!slugid && !!authCtx.AccessToken,
       staleTime: 10 * 60 * 1000, // Data is considered fresh for 10 minutes
       cacheTime: 60 * 60 * 1000, // Data is considered stale after 60 minutes
     }
