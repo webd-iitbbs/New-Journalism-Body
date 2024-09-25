@@ -1,7 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-
+const cron = require("node-cron");
+const https = require("https");
 const app = express();
 
 const AppError = require("./utils/appError");
@@ -25,6 +26,7 @@ app.options("*", cors());
 app.use(
   cors({
     origin: [
+      "https://oracle-journalism-body.onrender.com",
       "https://48bfw833-3000.inc1.devtunnels.ms",
       "http://localhost:3000",
     ], // Adjust this to match your front-end URL
@@ -54,6 +56,23 @@ app.get("/", (req, res) => {
     status: "success",
     message: "Connected to server",
   });
+});
+
+const backendUrl = "https://new-journalism-body.onrender.com/";
+cron.schedule("*/180 * * * * *", function () {
+  console.log("Restarting server");
+
+  https
+    .get(backendUrl, (res) => {
+      if (res.statusCode === 200) {
+        console.log("Restarted");
+      } else {
+        console.error(`failed to restart with status code: ${res.statusCode}`);
+      }
+    })
+    .on("error", (err) => {
+      console.error("Error ", err.message);
+    });
 });
 
 // Create a router for /api/v1
