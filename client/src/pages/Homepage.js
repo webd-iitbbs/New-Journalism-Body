@@ -9,7 +9,7 @@ function Homepage() {
       <Mainpage />
       <Articles />
     </>
-  )
+  );
 }
 
-export default Homepage
+export default Homepage;
