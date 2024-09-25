@@ -182,7 +182,7 @@ const AddArticle = () => {
     try {
       const res = await API.patch(`/api/v1/article/${slugid}`, body, {
         headers: {
-          Authorization: `Bearer ${userid}`,
+          Authorization: `Bearer ${authCtx.AccessToken}`,
         },
       });
       console.log(res.data);

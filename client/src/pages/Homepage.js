@@ -2,12 +2,14 @@ import React from "react";
 
 import { useAuth } from "../store/context/LoginContext";
 import Mainpage from "../components/mainpage";
+import Articles from "../components/Articles";
 function Homepage() {
   return (
     <>
-    <Mainpage/>
+      <Mainpage />
+      <Articles />
     </>
-  )
+  );
 }
 
-export default Homepage
+export default Homepage;
