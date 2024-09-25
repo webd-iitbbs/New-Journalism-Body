@@ -1,17 +1,13 @@
 import React from "react";
 
 import { useAuth } from "../store/context/LoginContext";
-import Articles from "../components/Articles";
-
-const Homepage = () => {
-  const authCtx = useAuth();
-  console.log(authCtx);
+import Mainpage from "../components/mainpage";
+function Homepage() {
   return (
-    <div className="w-full">
-      Homepage
-      <Articles />
-    </div>
-  );
-};
+    <>
+    <Mainpage/>
+    </>
+  )
+}
 
-export default Homepage;
+export default Homepage

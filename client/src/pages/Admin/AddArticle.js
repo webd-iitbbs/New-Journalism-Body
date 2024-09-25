@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Editor from "../../components/Editor";
+import Editor from "./../../components/Editor.tsx";
 import Modal from "react-modal";
 import { API } from "../../store/utils/API";
 import { notify, uploadHandlerServer } from "../../store/utils/helperFunctions";
