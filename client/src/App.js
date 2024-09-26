@@ -59,7 +59,7 @@ export default function App() {
   return (
     <div className="bg-[#f9f4ed min-h-full">
       <HashRouter>
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           <Navbar />
           <AllRoutes />
           <ToastContainer draggable />

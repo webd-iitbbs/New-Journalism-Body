@@ -1,17 +1,34 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { notify } from "../../store/utils/helperFunctions";
 import { API } from "../../store/utils/API";
 import { useAuth } from "../../store/context/LoginContext";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 import GoogleLoginPage from "./GoogleLogin";
+
 const Login = () => {
   const authCtx = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const location = useLocation();
+  const [path, setPath] = useState(location.pathname);
+  console.log(location.pathname);
 
+  useEffect(() => {
+    if (path !== location.pathname) {
+      setTimeout(() => {
+        navigate(path);
+      }, 200);
+    }
+  }, [path]);
+
+  useEffect(() => {
+    console.log(location.pathname);
+    console.log(location.pathname);
+  }, [location.pathname]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
@@ -43,13 +60,28 @@ const Login = () => {
       }
     }
   };
+
+  const changePath = (path) => {
+    setPath(path);
+  };
+
   return (
     <div
       className=" py-6 flex flex-col justify-center align-center sm:py-6"
       style={{ minHeight: "90dvh" }}
     >
       <div className="relative py-3 sm:max-w-xl mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-sky-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-sky-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div> */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={path}
+            className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-sky-500 shadow-lg transform sm:skew-y-0 sm:rounded-3xl"
+            initial={{ rotate: 0 }}
+            animate={{ rotate: -6, transition: { duration: 0.2 } }}
+            exit={{ rotate: 0, transition: { duration: 0.2 } }}
+          ></motion.div>
+        </AnimatePresence>
+
         <div className="relative px-4 py-6 bg-white shadow-lg sm:rounded-3xl sm:p-20">
           <div className="max-w-md mx-auto">
             <div>
@@ -110,14 +142,21 @@ const Login = () => {
           </div>
 
           <div className="mt-6">
-            <Link className=" hover:underline" to="/signup">
+            <button
+              className=" hover:underline"
+              onClick={() => changePath("/signup")}
+            >
               Don't have an account ? Signup
-            </Link>
+            </button>
           </div>
           <div className="mt-3 text-right">
-            <Link className=" hover:underline" to="/forgot-password">
+            <button
+              className=" hover:underline"
+              onClick={() => changePath("/forgot-password")}
+              // to="/forgot-password"
+            >
               Forgot Password ?
-            </Link>
+            </button>
           </div>
         </div>
       </div>
