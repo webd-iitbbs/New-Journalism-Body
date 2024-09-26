@@ -259,18 +259,21 @@ const AddArticle = () => {
                     },
                   }}
                 >
-                  <button
-                    onClick={closeModal}
-                    className="close-button text-white font-bold m-2"
-                  >
-                    Close
-                  </button>
-                  <div className="flex justify-center items-center overflow-scroll">
-                    <img
-                      src={coverImage}
-                      alt="Full Size"
-                      className="full-size-image max-w-md"
-                    />
+                  <div className="pt-20 h-[200px]">
+                    <button
+                      onClick={closeModal}
+                      className="close-button text-white font-bold m-2"
+                    >
+                      Close
+                    </button>
+                    <div className="flex justify-center items-center overflow-hidden">
+                      <img
+                        src={coverImage}
+                        alt="Full Size"
+                        className="full-size-image max-w-md"
+                        style={{ overflowY: "scroll", scrollbarWidth: "none" }}
+                      />
+                    </div>
                   </div>
                 </Modal>
               </div>

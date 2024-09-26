@@ -82,7 +82,7 @@ const Articlepage = () => {
         </Link>
       )}
       <div className="flex flex-col lg:flex-row gap-4">
-        <div className="w-full lg:w-3/4">
+        <div className="w-full ">
           <div className="flex flex-col md:flex-row gap-4 pb-8 border-b-2 border-black-800">
             <div className="w-full md:w-1/2 max-h-1/2 relative">
               <img
@@ -150,7 +150,7 @@ const Articlepage = () => {
             ></div>
           </div>
         </div>
-        <div className="lg:w-1/4">
+        {/* <div className="lg:w-1/4">
           {[...Array(5)].map((_, index) => (
             <div className="w-full flex flex-row m-4">
               <div
@@ -160,7 +160,7 @@ const Articlepage = () => {
               <div className="w-full bg-red-300 rounded-r-lg">hi </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
 
       <div className="w-full">

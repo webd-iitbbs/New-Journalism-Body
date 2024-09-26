@@ -79,7 +79,7 @@ const Articlepage = () => {
         Go to normal user Article Page
       </Link>
       <div className="flex flex-col lg:flex-row gap-4">
-        <div className="w-full lg:w-3/4">
+        <div className="w-full ">
           <div className="flex flex-row py-4">
             <div>
               <DropDown
@@ -136,7 +136,7 @@ const Articlepage = () => {
             ></div>
           </div>
         </div>
-        <div className="w-1/4">
+        {/* <div className="w-1/4">
           {[...Array(5)].map((_, index) => (
             <div className="w-full flex flex-row m-4">
               <div
@@ -146,7 +146,7 @@ const Articlepage = () => {
               <div className="w-full bg-red-300 rounded-r-lg">hi </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
 
       <div className="w-full">

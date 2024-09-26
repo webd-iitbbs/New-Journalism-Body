@@ -4,19 +4,21 @@ import { motion } from "framer-motion";
 import { useAuth } from "../store/context/LoginContext";
 import { VscListSelection } from "react-icons/vsc";
 import { RxHamburgerMenu } from "react-icons/rx";
-
+import { notify } from "../store/utils/helperFunctions";
 const Navbar = () => {
   const location = useLocation();
   const [active, setActive] = useState(location.pathname);
   const [isOpen, setIsOpen] = useState(false); // State for hamburger menu
   const authCtx = useAuth();
-
+  console.log(authCtx);
   const routes = [
-    { path: "/", name: "Home" },
+    { path: "/", name: "Home", title: "Home" },
     { path: "/about", name: "About Us" },
     { path: "/articles", name: "Articles" },
     { path: "/opinions", name: "Opinions" },
-    !authCtx.isLoggedIn ? { path: "/login", name: "Log In" } : null,
+    !authCtx.isLoggedIn
+      ? { path: "/login", name: "Log In", title: "LogIn to full access" }
+      : null,
   ].filter(Boolean);
 
   const handleToggle = () => {
@@ -48,6 +50,7 @@ const Navbar = () => {
               <motion.li
                 key={path.path}
                 className="relative"
+                title={path.title}
                 whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
               >
                 <Link
@@ -66,6 +69,9 @@ const Navbar = () => {
                 )}
               </motion.li>
             ))}
+            <li key="profile">
+              <Profiles />
+            </li>
           </ul>
         </div>
 
@@ -113,6 +119,10 @@ const Navbar = () => {
               </Link>
             </li>
           ))}
+
+          <li className="block px-4 py-2 text-black font-medium text-center flex justify-center">
+            <Profiles />
+          </li>
         </ul>
       </motion.div>
     </nav>
@@ -185,6 +195,79 @@ const AdminRoutes = () => {
               </Link>
             </li>
           ))}
+        </ul>
+      </motion.div>
+    </div>
+  );
+};
+
+const Profiles = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const authCtx = useAuth();
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
+
+  if (!authCtx.isLoggedIn) {
+    return null;
+  }
+  const logouthandler = () => {
+    setIsOpen(false);
+    authCtx.clearAuth();
+    notify("Logging Out Successful.", "light");
+  };
+
+  return (
+    <div className="relative">
+      <button
+        id="dropdownNavbarLink"
+        title={authCtx.name + " \n" + authCtx.email}
+        onClick={handleToggle}
+        className="flex items-center justify-between text-black font-medium relative"
+      >
+        <img
+          src={
+            authCtx?.imageUrl ||
+            "https://img.freepik.com/vector-premium/icono-perfil-avatar_188544-4755.jpg?w=360"
+          }
+          alt="profile"
+          width={25}
+          height={25}
+          className="rounded-2xl"
+        />
+      </button>
+
+      <motion.div
+        id="dropdownNavbar"
+        className={`absolute right-[-10px] z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${
+          isOpen ? "block" : "hidden"
+        }`}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: isOpen ? 1 : 0, scale: isOpen ? 1 : 0.9 }}
+        transition={{ duration: 0.3 }}
+      >
+        <ul
+          className="py-2 text-sm text-gray-700"
+          aria-labelledby="dropdownNavbarLink"
+        >
+          {/* <li key={route.path}>
+            <Link
+              to={route.path}
+              className="block px-4 py-2 hover:bg-gray-100"
+              onClick={() => setIsOpen(false)} // Close dropdown on link click
+            >
+              {route.name}
+            </Link>
+          </li> */}
+
+          <li
+            key={"logout"}
+            onClick={() => logouthandler()}
+            className="cursor-pointer"
+          >
+            <p className="block px-4 py-2 hover:bg-gray-100">Logout</p>
+          </li>
         </ul>
       </motion.div>
     </div>

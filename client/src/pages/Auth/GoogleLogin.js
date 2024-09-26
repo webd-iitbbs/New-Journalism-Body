@@ -28,7 +28,7 @@ const GoogleLoginPage = () => {
           authCtx.setName(resp.data.data.user.name);
           authCtx.setEmail(resp.data.data.user.email);
           authCtx.setUserId(resp.data.data.user._id);
-          authCtx.setImageUrl(resp.data.data.user.imageUrl);
+          authCtx.setImageUrl(resp.data.data.user.profileImage);
           authCtx.setAccessToken(resp.data.AccessToken);
           authCtx.setRefreshToken(resp.data.RefreshToken);
           navigate("/");

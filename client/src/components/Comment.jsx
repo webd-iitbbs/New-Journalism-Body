@@ -93,13 +93,14 @@ const SingleComment = ({ comment, userId, setAllComments, authCtx }) => {
         setDisliked(true);
         setLiked(false);
     }
+    console.log(comment);
     return (
         <article className="p-6 bg-white rounded-lg shadow-md relative">
             <footer className="flex justify-between items-center mb-2">
                 <div className="flex items-center">
                     <img
                         className="w-6 h-6 rounded-full mr-2"
-                        src={comment?.userId?.profileImage}
+                        src={comment?.userId?.profileImage || "https://img.freepik.com/vector-premium/icono-perfil-avatar_188544-4755.jpg?w=360"}
                         alt={comment?.userId?.profileImage}
                     />
                     <div>
