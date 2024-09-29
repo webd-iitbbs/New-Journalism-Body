@@ -41,7 +41,7 @@ function Mainpage() {
                 </div>
             </div>
 
-            <div className='bg-[#2A2A2A]'>
+            <div className='bg-[#2A2A2A]' id="aboutus">
                 <div className='flex flex-col md:flex-row w-full h-full p-5 md:p-10'>
                     <div className='w-full md:w-1/2 h-[300px] md:h-[680px] p-6 overflow-hidden rounded-[20px] bg-[#F9F4ED] mb-6 md:mb-0'>
                         <img src={instiimg} className='h-full  scale-[2.8] md:scale-[1.8] translate-y-12' alt="Institute" />

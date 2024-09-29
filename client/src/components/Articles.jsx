@@ -35,7 +35,7 @@ import { FaChevronRight } from "react-icons/fa";
 
 const Articles = () => {
     return (
-        <div className='min-h-screen bg-white flex flex-col'>
+        <div className='min-h-screen bg-white flex flex-col' id="articles">
             <div className='p-4 md:px-20 text-6xl font-black border-b-4 border-black' style={{ fontFamily: 'monospace' }}>
                 Articles
             </div>
@@ -43,15 +43,15 @@ const Articles = () => {
                 <div className='lg:w-1/4'>
                     <div className='bg-[#2A2A2A] text-white rounded-lg p-6 shadow-lg'>
                         <div className='text-2xl py-4 border-b border-gray-500 flex justify-between items-center'>
-                            <span>Recently Viewed</span>
+                            <span>Recent Articles</span>
                             <FaChevronRight className='text-gray-400' />
                         </div>
                         <div className='text-2xl py-4 border-b border-gray-500 flex justify-between items-center'>
-                            <span>Most Viewed</span>
+                            <span>Trending News</span>
                             <FaChevronRight className='text-gray-400' />
                         </div>
                         <div className='text-2xl py-4 border-b border-gray-500 flex justify-between items-center'>
-                            <span>Trending</span>
+                            <span>Most Read</span>
                             <FaChevronRight className='text-gray-400' />
                         </div>
                         <div className='text-2xl py-4 flex justify-between items-center'>
