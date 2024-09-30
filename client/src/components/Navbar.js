@@ -5,7 +5,7 @@ import { useAuth } from "../store/context/LoginContext";
 import { VscListSelection } from "react-icons/vsc";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { notify } from "../store/utils/helperFunctions";
-import logo from './../assets/logo.png'
+import logo from "./../assets/logo.png";
 const Navbar = () => {
   const location = useLocation();
   const [active, setActive] = useState(location.pathname);
@@ -42,15 +42,17 @@ const Navbar = () => {
             <img
               src={logo}
               alt="Oracle Logo"
-              className="w-16 h-16 rounded-full"
+              className="w-14 h-14 rounded-full"
             />
             {/* <span className="ml-3 text-3xl">Oracle</span> */}
           </li>
-          <Link to="/" className="pt-3">ORACLE</Link>
+          <Link to="/" className="pt-3">
+            ORACLE
+          </Link>
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-4 relative items-center text-lg">
+        <div className="hidden md:flex space-x-4 pt-3 relative items-center text-lg">
           <ul className="flex space-x-4">
             <li key="admin">
               <AdminRoutes />
@@ -71,7 +73,7 @@ const Navbar = () => {
                 </Link>
                 {active === path.path && (
                   <motion.div
-                    className="absolute bottom-0 left-0 w-full h-[2px] bg-blue-500"
+                    className="absolute bottom-3 left-0 w-full h-[2px] bg-blue-500"
                     layoutId="underline"
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
@@ -103,8 +105,9 @@ const Navbar = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : -20 }}
         transition={{ duration: 0.3 }}
-        className={`${isOpen ? "block" : "hidden"
-          } md:hidden absolute top-16 left-0 w-full bg-[#f9f4ed] border-t-2 border-[#d8d6d2] shadow-lg`}
+        className={`${
+          isOpen ? "block" : "hidden"
+        } md:hidden absolute top-16 left-0 w-full bg-[#f9f4ed] border-t-2 border-[#d8d6d2] shadow-lg`}
       >
         <ul className="py-4 text-center text-lg">
           <li
@@ -181,8 +184,9 @@ const AdminRoutes = () => {
 
       <motion.div
         id="dropdownNavbar"
-        className={`absolute z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${isOpen ? "block" : "hidden"
-          }`}
+        className={`absolute z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${
+          isOpen ? "block" : "hidden"
+        }`}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: isOpen ? 1 : 0, scale: isOpen ? 1 : 0.9 }}
         transition={{ duration: 0.3 }}
@@ -247,8 +251,9 @@ const Profiles = () => {
 
       <motion.div
         id="dropdownNavbar"
-        className={`absolute right-[-10px] z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${isOpen ? "block" : "hidden"
-          }`}
+        className={`absolute right-[-10px] z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${
+          isOpen ? "block" : "hidden"
+        }`}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: isOpen ? 1 : 0, scale: isOpen ? 1 : 0.9 }}
         transition={{ duration: 0.3 }}
