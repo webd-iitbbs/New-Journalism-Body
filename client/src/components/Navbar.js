@@ -32,7 +32,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className="sticky top-0 z-50 bg-[#f9f4ed] p-4 border-b-2 border-[#d8d6d2]"
+      className="sticky top-0 z-50 bg-[#f9f4ed] p-2 border-b-2 border-[#d8d6d2]"
       style={{ fontFamily: "HelveticaNeue, Arial, sans-serif" }}
     >
       <div className="container mx-auto flex justify-between items-center">
@@ -73,7 +73,7 @@ const Navbar = () => {
                 </Link>
                 {active === path.path && (
                   <motion.div
-                    className="absolute bottom-3 left-0 w-full h-[2px] bg-blue-500"
+                    className="absolute bottom-0 left-0 w-full h-[2px] bg-blue-500"
                     layoutId="underline"
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
