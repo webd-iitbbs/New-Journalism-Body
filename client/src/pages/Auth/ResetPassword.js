@@ -6,16 +6,19 @@ import { useAuth } from "../../store/context/LoginContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
+import Spinner from "../../components/Spinner";
+
 const Signup = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
   const email = queryParams.get("email");
-
+  const qtoken = queryParams.get("token");
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(qtoken != null ? qtoken : "");
+  const [loading, setLoading] = useState(false);
 
   const [path, setPath] = useState(location.pathname);
   console.log(location.pathname);
@@ -43,6 +46,8 @@ const Signup = () => {
       return;
     }
 
+    setLoading(true);
+
     try {
       // Call the signup API
       const response = await API.patch("/api/v1/auth/reset-password", {
@@ -60,6 +65,8 @@ const Signup = () => {
       if (error?.response?.data?.message) {
         notify(error.response.data.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
   const changePath = (path) => {
@@ -150,8 +157,15 @@ const Signup = () => {
                   <button
                     className="bg-cyan-500 text-white rounded-md px-2 py-1"
                     onClick={handleSubmit}
+                    disabled={loading}
                   >
-                    Submit
+                    Submit{" "}
+                    {loading && (
+                      <>
+                        &nbsp;
+                        <Spinner color="black" size="" />
+                      </>
+                    )}
                   </button>
                 </div>
               </div>

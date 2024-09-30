@@ -210,6 +210,8 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 });
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
+  const frontendUrl = req.headers.origin || req.headers.referer;
+  // console.log(frontendUrl);
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
     return next(new AppError("There is no user with this email address", 404));
@@ -220,17 +222,20 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   // send token to mail
 
   const message = `
-Dear User,
-
-Did you forget your password? No worries! Simply submit the following code along with your new password to reset it:
-
-Token: ${resetToken}
-
-If you didn't request a password reset, please disregard this email.
-
-Best regards,
-Oracle Team
-`;
+  Dear ${user.name || "User"},
+  
+  We received a request to reset your password. To proceed, please use the following verification code along with your new password:
+  
+  Reset Code: ${resetToken}
+  
+  To reset your password, click the link below or paste it into your browser:
+  ${frontendUrl}/#/reset-password?email=${user.email}&token=${resetToken}
+  
+  If you didn't request a password reset, you can safely ignore this email. Your account remains secure.
+  
+  Best regards,
+  The Oracle Team
+  `;
 
   await sendmail({
     email: user.email,

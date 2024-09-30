@@ -5,12 +5,15 @@ import { API } from "../../store/utils/API";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
+import Spinner from "../../components/Spinner";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const location = useLocation();
   const [path, setPath] = useState(location.pathname);
+  const [loading, setLoading] = useState(false);
+
   console.log(location.pathname);
 
   useEffect(() => {
@@ -27,6 +30,7 @@ const Login = () => {
       notify("Please fill all the fields");
       return;
     }
+    setLoading(true);
 
     try {
       // Call the login API
@@ -43,6 +47,8 @@ const Login = () => {
       if (error?.response?.data?.message) {
         notify(error.response.data.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,8 +102,15 @@ const Login = () => {
                   <button
                     className="bg-cyan-500 text-white rounded-md px-2 py-1"
                     onClick={handleSubmit}
+                    disabled={loading}
                   >
-                    Submit
+                    Submit{" "}
+                    {loading && (
+                      <>
+                        &nbsp;
+                        <Spinner color="black" size="" />
+                      </>
+                    )}
                   </button>
                 </div>
               </div>

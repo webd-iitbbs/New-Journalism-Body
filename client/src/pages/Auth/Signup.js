@@ -5,6 +5,7 @@ import { API } from "../../store/utils/API";
 import { useAuth } from "../../store/context/LoginContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import Spinner from "../../components/Spinner";
 
 import GoogleLoginPage from "./GoogleLogin";
 const Signup = () => {
@@ -15,6 +16,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [path, setPath] = useState(location.pathname);
 
@@ -40,7 +42,12 @@ const Signup = () => {
       notify("Password should be atleast 8 characters long");
       return;
     }
+    if (!email.includes("@")) {
+      notify("Invalid email address");
+      return;
+    }
 
+    setLoading(true);
     try {
       // Call the signup API
       const response = await API.post("/api/v1/auth/signup", {
@@ -64,6 +71,8 @@ const Signup = () => {
       if (error?.response?.data?.message) {
         notify(error.response.data.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -195,8 +204,15 @@ const Signup = () => {
                   <button
                     className="bg-cyan-500 text-white rounded-md px-2 py-1"
                     onClick={handleSubmit}
+                    disabled={loading}
                   >
-                    Submit
+                    Submit{" "}
+                    {loading && (
+                      <>
+                        &nbsp;
+                        <Spinner color="black" size="" />
+                      </>
+                    )}
                   </button>
                 </div>
               </div>

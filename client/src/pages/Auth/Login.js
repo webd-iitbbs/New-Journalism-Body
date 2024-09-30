@@ -5,6 +5,7 @@ import { API } from "../../store/utils/API";
 import { useAuth } from "../../store/context/LoginContext";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import Spinner from "../../components/Spinner";
 
 import GoogleLoginPage from "./GoogleLogin";
 
@@ -15,6 +16,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const location = useLocation();
   const [path, setPath] = useState(location.pathname);
+  const [loading, setLoading] = useState(false);
   console.log(location.pathname);
 
   useEffect(() => {
@@ -35,7 +37,15 @@ const Login = () => {
       notify("Please fill all the fields");
       return;
     }
-
+    if (!email.includes("@")) {
+      notify("Email is not valid");
+      return;
+    }
+    if (password.trim().length < 8) {
+      notify("Password length must be greater than 8 characters.");
+      return;
+    }
+    setLoading(true);
     try {
       // Call the login API
       const response = await API.post("/api/v1/auth/login", {
@@ -58,6 +68,8 @@ const Login = () => {
       if (error?.response?.data?.message) {
         notify(error.response.data.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -129,8 +141,15 @@ const Login = () => {
                   <button
                     className="bg-cyan-500 text-white rounded-md px-2 py-1"
                     onClick={handleSubmit}
+                    disabled={loading}
                   >
-                    Submit
+                    Submit{" "}
+                    {loading && (
+                      <>
+                        &nbsp;
+                        <Spinner color="black" size="" />
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
