@@ -1,7 +1,11 @@
 import React from "react";
-
+import AllArticles from "./../components/allarticle";
 const Articlepage = () => {
-  return <div>Articlepage</div>;
+  return(
+    <>
+    <AllArticles/>
+    </>
+  )
 };
 
 export default Articlepage;

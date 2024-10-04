@@ -11,7 +11,13 @@ const ArticleCard = ({ article }) => {
   return (
     <div className="">
       <div className="h-full border-2 border-gray-800 rounded-lg overflow-hidden">
-        <img className="lg:h-64 md:h-64 w-full object-cover object-center" src={article.coverImage || "https://dummyimage.com/720x400"} alt="blog" />
+      <div className="flex justify-center items-center h-64">
+          <img
+            className="object-contain h-full rounded-lg p-1"
+            src={article.coverImage || "https://dummyimage.com/720x400"}
+            alt="blog"
+          />
+        </div>
         <div className="p-6">
           <h2 className="tracking-widest text-xs title-font font-medium text-gray-500 mb-3">{article.category}</h2>
           <h1 className="title-font text-lg font-medium text-black mb-3">{article.title}</h1>

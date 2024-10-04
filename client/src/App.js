@@ -48,6 +48,7 @@ const AllRoutes = () => {
           <Route path="/admin/edit-article/:slugid" element={<EditArticle />} />
           <Route path="/admin/add-admin" element={<AddAdmin />} />
           <Route path="/admin/articles" element={<AllArticleAdminpage />} />
+          <Route path="/articles" element={<AllArticlepage />} />
           <Route path="/admin/article/:slug" element={<AdminArticlepage />} />
         </>
       )}

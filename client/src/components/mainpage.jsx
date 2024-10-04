@@ -66,15 +66,15 @@ function Mainpage() {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col items-center px-5 py-10 bg-gray-50 min-h-screen">
-                <div className="text-center mb-10">
+            <div className="flex flex-col items-center px-5 py-10 bg-gray-50 min-h-screen ">
+                <div className="text-center mb-4 md:mb-8">
                     <h1 className="text-3xl lg:text-6xl font-bold">
                         MEET YOUR <span className="text-red-400">CHIEF EDITOR</span>
                     </h1>
                 </div>
 
-                <div className="flex flex-col lg:flex-row justify-between w-full gap-8">
-                    <div className="w-full lg:w-1/2 flex-1 bg-white p-4  order-2 lg:p-6 rounded-lg shadow-lg border border-gray-200 order-1">
+                <div className="flex flex-col lg:flex-row justify-between w-full md:gap-8">
+                    <div className="w-full lg:w-1/2 flex-1 bg-white p-4  order-2 lg:p-6 rounded-lg shadow-lg border border-gray-200  ">
                         <div className="text-2xl mb-4">
                             <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <mask id="mask0_154_251" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="0" y="0" width="46" height="46">
@@ -94,9 +94,14 @@ function Mainpage() {
                             Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse potenti.
                         </p>
                     </div>
-                    <div className="w-full lg:w-1/2 flex-1 bg-gray-300 rounded-lg shadow-lg order-1 lg:order-2">
-                        <img src={chiefeditor} alt="ce" className='w-full h-full object-cover brightness-125 drop-shadow-2xl rounded-lg grayscale saturate-50 backdrop-blur-xl filter backdrop-invert backdrop-opacity-100' />
+                    <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2">
+                        <img
+                            src={chiefeditor}
+                            alt="ce"
+                            className="w-3/4 mb-2 h-full object-cover brightness-125 drop-shadow-2xl rounded-lg grayscale saturate-50 backdrop-blur-xl filter backdrop-invert backdrop-opacity-100 lg:w-full"
+                        />
                     </div>
+
                 </div>
             </div>
 
