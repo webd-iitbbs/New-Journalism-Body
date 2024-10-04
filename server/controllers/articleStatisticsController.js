@@ -35,10 +35,15 @@ exports.getMostReadArticles = catchAsync(async (req, res) => {
 
 // Trending articles
 exports.getTrendingArticles = catchAsync(async (req, res) => {
-  const limit = req.query.limit ? parseInt(req?.query?.limit) : 6;
-  const articles = await Article.find({ status: "published" })
-    .sort({ upvotes: -1 })
-    .limit(limit);
+  const limit = req.query.limit ? parseInt(req.query.limit) : 6;
+
+  const articles = await Article.aggregate([
+    { $match: { status: "published" } },
+    { $addFields: { upvotesLength: { $size: { $ifNull: ["$upVotes", []] } } } },
+    { $sort: { upvotesLength: -1 } },
+    { $limit: limit },
+  ]);
+
   return res.status(200).json({ articles });
 });
 
