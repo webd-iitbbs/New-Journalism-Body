@@ -39,7 +39,7 @@ exports.getTrendingArticles = catchAsync(async (req, res) => {
 
   const articles = await Article.aggregate([
     { $match: { status: "published" } },
-    { $addFields: { upvotesLength: { $size: "$upvotes" } } },
+    { $addFields: { upvotesLength: { $size: { $ifNull: ["$upVotes", []] } } } },
     { $sort: { upvotesLength: -1 } },
     { $limit: limit },
   ]);
