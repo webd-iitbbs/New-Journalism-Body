@@ -84,9 +84,9 @@ const Articlepage = () => {
   useEffect(() => {
     if (!article || !article.upVotes) return; // Return early if article or upVotes is not available
 
-    const isliked = article.upVotes.some(
+    const isliked = article?.upVotes?.some(
       (upVoteId) =>
-        upVoteId === authCtx.userId || upVoteId.equals(authCtx.userId) // Handle ObjectId comparison
+        upVoteId === authCtx?.userId || upVoteId?.equals(authCtx.userId) // Handle ObjectId comparison
     );
     console.log(isliked);
     setIsLiked(isliked); // Set isLiked as true or false
