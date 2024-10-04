@@ -1,5 +1,18 @@
 import { toast } from "react-toastify";
 import { API, baseBackendUrl } from "./API";
+import CryptoJS from "crypto-js";
+
+const encryptData = (data) => {
+  return CryptoJS.AES.encrypt(
+    JSON.stringify(data),
+    "your-secret-key#oracle2024"
+  ).toString();
+};
+
+const decryptData = (ciphertext) => {
+  const bytes = CryptoJS.AES.decrypt(ciphertext, "your-secret-key#oracle2024");
+  return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+};
 
 const formatDate = (dateString, formatType) => {
   // Parse the date string into a Date object
@@ -61,6 +74,26 @@ const uploadHandlerServer = async (file: any) => {
   }
 };
 
+const getLocalDataAndDecrypt = (key) => {
+  const data = localStorage.getItem(key);
+  console.log(data);
+  if (data) {
+    return decryptData(data);
+  }
+  return null;
+};
+
+const setLocalDataAndEncrypt = (key, data) => {
+  localStorage.setItem(key, encryptData(data));
+  return true;
+};
+
 const notify = (message, style) => toast(message, { theme: "light", ...style });
 
-export { formatDate, notify, uploadHandlerServer };
+export {
+  formatDate,
+  notify,
+  uploadHandlerServer,
+  getLocalDataAndDecrypt,
+  setLocalDataAndEncrypt,
+};

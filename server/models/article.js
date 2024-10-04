@@ -63,6 +63,10 @@ const articleSchema = new mongoose.Schema({
     type: [addedOrUpdatedBySchema],
     select: false,
   },
+  views: {
+    type: Number,
+    default: 0,
+  },
 });
 
 articleSchema.pre("save", function (next) {

@@ -4,12 +4,16 @@ import { API } from "../store/utils/API";
 import { formatDate, notify } from "../store/utils/helperFunctions";
 import "suneditor/dist/css/suneditor.min.css";
 import { useQuery } from "react-query";
-
+import {
+  getLocalDataAndDecrypt,
+  setLocalDataAndEncrypt,
+} from "../store/utils/helperFunctions";
 import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 import { MdOutlineChat } from "react-icons/md";
 import { FaShareAlt } from "react-icons/fa";
 import Comment from "../components/Comment";
 import { useAuth } from "../store/context/LoginContext";
+import PuffLoader from "react-spinners/PuffLoader";
 
 const fetchArticle = async (slug) => {
   try {
@@ -25,6 +29,7 @@ const fetchArticle = async (slug) => {
 const Articlepage = () => {
   const authCtx = useAuth();
   const { slug } = useParams();
+  const [isLiked, setIsLiked] = useState(false);
   const {
     data: article,
     error,
@@ -36,7 +41,64 @@ const Articlepage = () => {
     cacheTime: 60 * 60 * 1000, // Data is considered stale after 60 minutes
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  useEffect(() => {
+    const artiseenStatus = async () => {
+      if (!article?.slug) return; // Early return if article or slug is not available
+
+      const getLocalData = getLocalDataAndDecrypt("articlesSeen") || [];
+
+      console.log(getLocalData);
+      const articleIndex = getLocalData.findIndex(
+        (entry) => entry.slug === article.slug
+      );
+
+      if (articleIndex !== -1) {
+        getLocalData[articleIndex].date = new Date().toISOString();
+        setLocalDataAndEncrypt("articlesSeen", getLocalData); // No need to stringify again
+        return;
+      }
+
+      try {
+        const response = await API.post(
+          `/api/v1/article/${article.slug}/views`,
+          {
+            headers: {
+              Authorization: `Bearer ${authCtx.AccessToken}`,
+            },
+          }
+        );
+        console.log(response);
+
+        getLocalData.push({
+          slug: article.slug,
+          date: new Date().toISOString(), // Store the date in ISO format
+        });
+        setLocalDataAndEncrypt("articlesSeen", getLocalData); // No need to stringify
+      } catch (error) {
+        console.error("Error updating article views", error);
+      }
+    };
+    artiseenStatus();
+  }, [article]);
+
+  useEffect(() => {
+    if (!article || !article.upVotes) return; // Return early if article or upVotes is not available
+
+    const isliked = article.upVotes.some(
+      (upVoteId) =>
+        upVoteId === authCtx.userId || upVoteId.equals(authCtx.userId) // Handle ObjectId comparison
+    );
+    console.log(isliked);
+    setIsLiked(isliked); // Set isLiked as true or false
+  }, [article, authCtx.userId]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-96 flex-grow">
+        <PuffLoader color="#f1c40f" loading={isLoading} size={150} />
+      </div>
+    );
+  }
   if (article?.error) {
     notify(article?.message);
     return (
@@ -68,6 +130,24 @@ const Articlepage = () => {
     }
   };
 
+  const handleLike = async () => {
+    try {
+      const response = await API.post(
+        `/api/v1/article/${article.slug}/upvote`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${authCtx.AccessToken}`,
+          },
+        }
+      );
+      setIsLiked(!isLiked);
+      console.log(response);
+    } catch (error) {
+      console.error("Error liking article", error);
+    }
+  };
+
   return (
     <div
       className="p-8 md:p-20 flex flex-col gap-4"
@@ -83,7 +163,7 @@ const Articlepage = () => {
       )}
       <div className="flex flex-col lg:flex-row gap-4">
         <div className="w-full ">
-          <div className="flex flex-col md:flex-row gap-4 pb-8 border-b-2 border-black-800">
+          <div className="flex flex-col md:flex-row gap-8 pb-8 border-b-2 border-black-800">
             <div className="w-full md:w-1/2 max-h-1/2 relative">
               <img
                 src={article.coverImage}
@@ -93,16 +173,21 @@ const Articlepage = () => {
 
               <div className="absolute bottom-0 p-2 flex flex-row gap-4">
                 <div>
-                  <FaRegThumbsUp
-                    color="white"
-                    size={24}
-                    className="hover:fill-blue-500"
-                  />
-                  {/* <FaThumbsUp
-                  color="white"
-                  size={24}
-                  className="hover:fill-blue-500"
-                /> */}
+                  {!isLiked ? (
+                    <FaRegThumbsUp
+                      color="white"
+                      size={24}
+                      className="hover:fill-blue-500"
+                      onClick={handleLike}
+                    />
+                  ) : (
+                    <FaThumbsUp
+                      color="white"
+                      size={24}
+                      className="hover:fill-blue-500"
+                      onClick={handleLike}
+                    />
+                  )}
                 </div>
                 <MdOutlineChat
                   color="white"

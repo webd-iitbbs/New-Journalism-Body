@@ -21,6 +21,8 @@ import EditArticle from "./pages/Admin/EditArticle";
 import AllArticleAdminpage from "./pages/Admin/AllArticles";
 import AdminArticlepage from "./pages/Admin/AdminArticlepage";
 
+import Footer from "./components/Footer";
+
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -57,11 +59,14 @@ const AllRoutes = () => {
 
 export default function App() {
   return (
-    <div className="bg-[#f9f4ed min-h-full">
+    <div className="min-h-screen flex flex-col bg-[#f9f4ed]">
       <HashRouter>
         <AnimatePresence mode="wait">
           <Navbar />
-          <AllRoutes />
+          <div className="flex-grow">
+            <AllRoutes />
+          </div>
+          <Footer />
           <ToastContainer draggable />
           <ReactQueryDevtools initialIsOpen={false} />
         </AnimatePresence>

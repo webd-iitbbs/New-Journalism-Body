@@ -7,6 +7,10 @@ import { useQuery } from "react-query";
 import "suneditor/dist/css/suneditor.min.css";
 import PuffLoader from "react-spinners/PuffLoader";
 import Comment from "../../components/Comment";
+import {
+  getLocalDataAndDecrypt,
+  setLocalDataAndEncrypt,
+} from "../../store/utils/helperFunctions";
 
 const fetchArticle = async (slug, token) => {
   try {
@@ -50,6 +54,46 @@ const Articlepage = () => {
       setArticleStatus(article.status);
     }
   }, [article, article?.status]);
+
+  useEffect(() => {
+    const artiseenStatus = async () => {
+      if (!article?.slug) return; // Early return if article or slug is not available
+
+      const getLocalData = getLocalDataAndDecrypt("articlesSeen") || [];
+
+      console.log(getLocalData);
+      const articleIndex = getLocalData.findIndex(
+        (entry) => entry.slug === article.slug
+      );
+
+      if (articleIndex !== -1) {
+        getLocalData[articleIndex].date = new Date().toISOString();
+        setLocalDataAndEncrypt("articlesSeen", getLocalData); // No need to stringify again
+        return;
+      }
+
+      try {
+        const response = await API.post(
+          `/api/v1/article/${article.slug}/views`,
+          {
+            headers: {
+              Authorization: `Bearer ${authCtx.AccessToken}`,
+            },
+          }
+        );
+        console.log(response);
+
+        getLocalData.push({
+          slug: article.slug,
+          date: new Date().toISOString(), // Store the date in ISO format
+        });
+        setLocalDataAndEncrypt("articlesSeen", getLocalData); // No need to stringify
+      } catch (error) {
+        console.error("Error updating article views", error);
+      }
+    };
+    artiseenStatus();
+  }, [article]);
 
   if (isLoading) {
     return (

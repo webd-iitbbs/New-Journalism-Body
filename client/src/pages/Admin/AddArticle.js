@@ -5,10 +5,12 @@ import { API } from "../../store/utils/API";
 import { notify, uploadHandlerServer } from "../../store/utils/helperFunctions";
 import debounce from "lodash/debounce";
 import { useAuth } from "../../store/context/LoginContext";
+import { useNavigate } from "react-router-dom";
 
 const AddArticle = () => {
   const authCtx = useAuth();
   const userid = authCtx.userId;
+  const navigate = useNavigate();
   const [coverImage, setCoverImage] = useState(null); // contains blob of image
   const [coverImage1, setCoverImage1] = useState(null); // contains image
 
@@ -132,6 +134,11 @@ const AddArticle = () => {
       });
       console.log(res.data);
       notify("Article saved successfully");
+      navigate(`/admin/article/${body.slug}`); // Redirect to the saved article page
+      // Redirect to the saved article page
+      notify(
+        "Change Status from Draft to Published to make the article live on the website"
+      );
     } catch (err) {
       console.log(err);
       setErrorMessage("Error saving article");

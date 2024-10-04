@@ -6,7 +6,7 @@ import chiefeditor from './../assets/CE1.JPG'
 function Mainpage() {
     return (
         <>
-            <div className='bg-[#F9F4ED]'>
+            <div className='max-w-full overflow-clip bg-[#F9F4ED]'>
                 <div className='flex flex-col md:flex-row w-full p-5 md:p-10'>
                     <div className='w-full md:w-1/2 flex flex-col mb-6 md:mb-0'>
                         <div className='bg-[#2A2A2A] rounded-[20px] p-6 mb-4'>
@@ -24,7 +24,7 @@ function Mainpage() {
                             </div>
                         </div>
                         <div className='flex flex-row h-[100px] md:h-[160px]'>
-                            <img src={newspaper} className='w-3/4 rounded-md mr-2' alt="Newspaper" />
+                            <img src={newspaper} className="w-3/4 rounded-md mr-2" alt="Newspaper" />
                             <div className="w-1/4 bg-[#AF695C] flex items-center justify-center rounded-md">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-40 w-40 text-white transform -rotate-45" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M10 18a1 1 0 01-.707-.293l-7-7a1 1 0 011.414-1.414L9 14.586V2a1 1 0 112 0v12.586l5.293-5.293a1 1 0 011.414 1.414l-7 7A1 1 0 0110 18z" clipRule="evenodd" />

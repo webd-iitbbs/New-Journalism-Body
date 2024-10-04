@@ -221,16 +221,17 @@ exports.upvoteArticle = catchAsync(async (req, res, next) => {
     return next(new AppError("Article not found", 404));
   }
 
+  // Ensure upVotes array exists
+  if (!article.upVotes) {
+    article.upVotes = [];
+  }
+
   // Check if the user has already upvoted the article
-  const userUpvoted = article.upVotes.includes(userId);
-  console.log(userUpvoted);
+  const userUpvoted = article.upVotes.some((id) => id.equals(userId));
 
   // Toggle the upvote status
   if (userUpvoted) {
-    article.upVotes = article.upVotes.filter((id) => {
-      console.log(id, userId);
-      return id !== userId;
-    });
+    article.upVotes = article.upVotes.filter((id) => !id.equals(userId));
   } else {
     article.upVotes.push(userId);
   }
@@ -244,6 +245,28 @@ exports.upvoteArticle = catchAsync(async (req, res, next) => {
     message: userUpvoted
       ? "Upvote removed successfully"
       : "Article upvoted successfully",
+    data: {
+      article,
+      upVotes: article.upVotes.length, // Optionally return the number of upvotes
+    },
+  });
+});
+
+exports.incrementViews = catchAsync(async (req, res, next) => {
+  const { slug } = req.params;
+  const article = await Article.findOne({ slug });
+
+  if (!article) {
+    return next(new AppError("Article not found", 404));
+  }
+
+  article.views += 1;
+
+  await article.save();
+
+  return res.status(200).json({
+    status: "success",
+    message: "Views incremented successfully",
     data: {
       article,
     },

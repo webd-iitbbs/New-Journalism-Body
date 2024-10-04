@@ -59,4 +59,6 @@ router
     ArticleController.getArticleAdmin
   );
 
+router.route("/:slug/views").post(ArticleController.incrementViews);
+
 module.exports = router;

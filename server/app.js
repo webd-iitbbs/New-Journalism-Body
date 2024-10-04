@@ -10,6 +10,7 @@ const globalErrorHandler = require("./controllers/errorController");
 // Import Routes
 const AdminRoute = require("./routes/adminRoute");
 const ArticleRoute = require("./routes/articleRoute");
+const ArticleStatsRoute = require("./routes/articleStatistics");
 const CommentRoute = require("./routes/commentRoute");
 const AnnouncementRoute = require("./routes/announcementRoute");
 const ContactUsRoute = require("./routes/contactUsRoute");
@@ -80,6 +81,7 @@ const apiRouter = express.Router();
 
 apiRouter.use("/admin", AdminRoute);
 apiRouter.use("/article", ArticleRoute);
+apiRouter.use("/article-stats", ArticleStatsRoute);
 apiRouter.use("/comment", CommentRoute);
 apiRouter.use("/announcement", AnnouncementRoute);
 apiRouter.use("/contactus", ContactUsRoute);
