@@ -10,8 +10,9 @@ const ArticleCard = ({ article }) => {
   };
   return (
     <div className="">
-      <div className="h-full border-2 border-gray-800 rounded-lg overflow-hidden">
-      <div className="flex justify-center items-center h-64">
+
+      <div className="h-full border-2 border-gray-800 rounded-lg overflow-hidden hover:scale-[1.01] hover:shadow-[10px_15px_15px_5px_rgba(0,0,0,0.3)]">
+        <div className="flex justify-center items-center h-64">
           <img
             className="object-contain h-full rounded-lg p-1"
             src={article.coverImage || "https://dummyimage.com/720x400"}
