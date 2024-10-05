@@ -15,7 +15,7 @@ const Navbar = () => {
   const routes = [
     { path: "/", name: "Home", title: "Home" },
     { path: "/about", name: "About Us" },
-    { path: "/articles", name: "Articles" },
+    { path: "/articles?limit=10", name: "Articles" },
     { path: "/opinions", name: "Opinions" },
     !authCtx.isLoggedIn
       ? { path: "/login", name: "Log In", title: "LogIn to full access" }

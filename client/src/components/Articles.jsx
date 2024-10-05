@@ -76,7 +76,7 @@ const Articles = () => {
                     className='lg:w-1/4'
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, amount: 0.5 }} // Trigger once when 50% of the element is in view
+                    viewport={{ once: true, amount: 0.2 }} // Trigger once when 50% of the element is in view
                     variants={categoryVariants}
                 >
                     <div className='bg-[#2A2A2A] text-white rounded-lg p-6 shadow-lg sm:sticky sm:top-20'>

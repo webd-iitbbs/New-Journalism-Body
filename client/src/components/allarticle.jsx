@@ -3,6 +3,8 @@ import ArticleCard from './ArticleCard';
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { API } from '../store/utils/API';
+import { IoIosSearch } from "react-icons/io";
+
 const Allarticle = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -56,38 +58,25 @@ const Allarticle = () => {
                         placeholder="Search"
                         className="w-full px-4 py-2 border rounded-lg text-gray-600 "
                     />
-                    <button className="absolute right-2 top-2 text-gray-600">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M15 11a4 4 0 11-8 0 4 4 0 018 0z"
-                            />
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M17.657 16.657L21 20"
-                            />
-                        </svg>
+                    <button className="absolute align-center right-2 top-3 text-gray-600">
+                        <IoIosSearch className="h-5 w-5 " />
                     </button>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                    <button className="px-4 py-2 bg-black text-white rounded-md w-full sm:w-auto">
+                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "recent" ? "bg-black" : "bg-gray-200"}`}
+                        onClick={() => { setSelectedCategory("recent") }}
+                    >
                         Recent
                     </button>
-                    <button className="px-4 py-2 bg-gray-200 rounded-md w-full sm:w-auto">
+                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "trending" ? "bg-black" : "bg-gray-200"}`}
+                        onClick={() => { setSelectedCategory("trending") }}
+                    >
                         Trending
                     </button>
-                    <button className="px-4 py-2 bg-gray-200 rounded-md w-full sm:w-auto">
+                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "most-read" ? "bg-black" : "bg-gray-200"}`}
+                        onClick={() => { setSelectedCategory("most-read") }}
+                    >
                         Most Read
                     </button>
                     <div className="relative w-full sm:w-auto">

@@ -8,6 +8,7 @@ import Homepage from "./pages/Homepage";
 import Articlepage from "./pages/Articlepage";
 import AllArticlepage from "./pages/AllArticlepage";
 import ErrorPage from "./pages/ErrorPage";
+import AboutUs from "./pages/AboutUs";
 
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
@@ -21,6 +22,7 @@ import EditArticle from "./pages/Admin/EditArticle";
 import AllArticleAdminpage from "./pages/Admin/AllArticles";
 import AdminArticlepage from "./pages/Admin/AdminArticlepage";
 
+import ScrollToTop from "./components/ScrollToTop";
 import Footer from "./components/Footer";
 
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -41,6 +43,7 @@ const AllRoutes = () => {
 
       <Route path="/articles" element={<AllArticlepage />} />
       <Route path="/article/:slug" element={<Articlepage />} />
+      <Route path="/about" element={<AboutUs />} />
 
       {admin && (
         <>
@@ -68,6 +71,7 @@ export default function App() {
             <AllRoutes />
           </div>
           <Footer />
+          <ScrollToTop />
           <ToastContainer draggable />
           <ReactQueryDevtools initialIsOpen={false} />
         </AnimatePresence>

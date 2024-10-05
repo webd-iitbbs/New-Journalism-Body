@@ -16,8 +16,11 @@ const Footer = () => {
         <p className="text-[20px] text-gray-400 sm:ml-2 sm:pl-4 sm:border-l-2 sm:border-gray-800 sm:py-2 sm:mt-0 mt-4">
           Journalism Body IIT Bhubaneswar
           {/* <a href="https://twitter.com/knyttneve" className="text-gray-500 ml-1" target="_blank" rel="noopener noreferrer">@knyttneve</a> */}
+          <p className='text-[12px]'>
+            © Copyright 2024 | All rights Reserved
+          </p>
         </p>
-        <span className="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start list-none">
+        <span className="inline-flex sm:ml-auto sm:mt-0 mt-4 pr-3 justify-center sm:justify-start list-none">
           {/* <li className="text-gray-400">
             <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-8 h-8" viewBox="0 0 24 24">
               <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
