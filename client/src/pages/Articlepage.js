@@ -149,7 +149,7 @@ const Articlepage = () => {
 
   return (
     <div
-      className="p-8 md:p-20 flex flex-col gap-4"
+      className="p-2 mt-10 md:p-12 flex flex-col gap-4"
       style={{ fontFamily: "Arial" }}
     >
       {authCtx.isAdmin && (
@@ -176,14 +176,14 @@ const Articlepage = () => {
                     <FaRegThumbsUp
                       color="white"
                       size={24}
-                      className="hover:fill-blue-500"
+                      className="hover:fill-blue-500 cursor-pointer"
                       onClick={handleLike}
                     />
                   ) : (
                     <FaThumbsUp
                       color="white"
                       size={24}
-                      className="hover:fill-blue-500"
+                      className="hover:fill-blue-500 cursor-pointer"
                       onClick={handleLike}
                     />
                   )}
@@ -191,13 +191,13 @@ const Articlepage = () => {
                 <MdOutlineChat
                   color="white"
                   size={24}
-                  className="hover:fill-blue-500"
+                  className="hover:fill-blue-500 cursor-pointer"
                   onClick={handleScroll}
                 />
                 <FaShareAlt
                   color="white"
                   size={24}
-                  className="hover:fill-blue-500"
+                  className="hover:fill-blue-500 cursor-pointer"
                   onClick={shareHandler}
                 />
               </div>
