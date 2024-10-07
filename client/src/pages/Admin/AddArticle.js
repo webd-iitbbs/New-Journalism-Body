@@ -134,7 +134,7 @@ const AddArticle = () => {
       });
       console.log(res.data);
       notify("Article saved successfully");
-      navigate(`/admin/article/${body.slug}`); // Redirect to the saved article page
+      navigate(`/admin/article/${body.slug.toLowerCase()}`); // Redirect to the saved article page
       // Redirect to the saved article page
       notify(
         "Change Status from Draft to Published to make the article live on the website"
