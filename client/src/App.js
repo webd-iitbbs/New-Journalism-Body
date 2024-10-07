@@ -9,6 +9,7 @@ import Articlepage from "./pages/Articlepage";
 import AllArticlepage from "./pages/AllArticlepage";
 import ErrorPage from "./pages/ErrorPage";
 import AboutUs from "./pages/AboutUs";
+import Opinions from "./pages/Opinion";
 
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
@@ -21,6 +22,7 @@ import AddArticle from "./pages/Admin/AddArticle";
 import EditArticle from "./pages/Admin/EditArticle";
 import AllArticleAdminpage from "./pages/Admin/AllArticles";
 import AdminArticlepage from "./pages/Admin/AdminArticlepage";
+import AdminAnnouncement from "./pages/Admin/Announcement";
 
 import ScrollToTop from "./components/ScrollToTop";
 import Footer from "./components/Footer";
@@ -41,6 +43,7 @@ const AllRoutes = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
 
+      <Route path="/opinions" element={<Opinions />} />
       <Route path="/articles" element={<AllArticlepage />} />
       <Route path="/article/:slug" element={<Articlepage />} />
       <Route path="/about" element={<AboutUs />} />
@@ -53,6 +56,7 @@ const AllRoutes = () => {
           <Route path="/admin/articles" element={<AllArticleAdminpage />} />
           <Route path="/articles" element={<AllArticlepage />} />
           <Route path="/admin/article/:slug" element={<AdminArticlepage />} />
+          <Route path="/admin/announcement" element={<AdminAnnouncement />} />
         </>
       )}
 

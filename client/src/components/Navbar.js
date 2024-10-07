@@ -147,6 +147,7 @@ const AdminRoutes = () => {
     { name: "All Articles", path: "/admin/articles" },
     { name: "Add Article", path: "/admin/add-article" },
     { name: "Add Admin", path: "/admin/add-admin" },
+    { name: "Announcement Add/Edit", path: "/admin/announcement" },
   ];
 
   const handleToggle = () => {

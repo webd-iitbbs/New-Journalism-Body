@@ -67,16 +67,21 @@ exports.likeOrDislikeComment = catchAsync(async (req, res, next) => {
     if (!comment.likes.includes(userId)) {
       comment.likes.push(userId);
     }
-    comment.dislikes = comment.dislikes.filter((id) => id !== userId);
+    comment.dislikes = comment.dislikes.filter(
+      (id) => id.toString() !== userId.toString()
+    );
   } else if (like === "dislike") {
     if (!comment.dislikes.includes(userId)) {
       comment.dislikes.push(userId);
     }
-    comment.likes = comment.likes.filter((id) => id !== userId);
+    comment.likes = comment.likes.filter(
+      (id) => id.toString() !== userId.toString()
+    );
   } else {
-    return next(new AppError("Invalid like value", 400));
+    return next(
+      new AppError("Invalid like value, it should be true or false", 400)
+    );
   }
-
   await comment.save();
   return res.status(200).json({ comment });
 });

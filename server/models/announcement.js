@@ -22,7 +22,7 @@ const annoucementSchema = new mongoose.Schema({
   content: {
     type: String,
   },
-  coverImage: {
+  link: {
     type: String,
   },
   date: {

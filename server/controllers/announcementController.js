@@ -10,7 +10,10 @@ const AppError = require("../utils/appError");
 // DELETE ANNOUNCEMENT - deleteAnnouncement
 
 exports.getAnnouncements = catchAsync(async (req, res, next) => {
-  const announcements = await Announcement.find({ deleted: false });
+  const { deleted } = req.query;
+
+  const query = deleted === "false" ? { deleted: false } : {};
+  const announcements = await Announcement.find(query);
   res.status(200).json({
     status: "success",
     data: {
@@ -34,11 +37,11 @@ exports.getRecentAnnouncements = catchAsync(async (req, res, next) => {
 });
 
 exports.createAnnouncement = catchAsync(async (req, res, next) => {
-  const { title, coverImage, content } = req.body;
+  const { title, link, content } = req.body;
 
   const announcement = await Announcement.create({
     title,
-    coverImage,
+    link,
     content,
     addedOrUpdatedBy: [
       {
@@ -57,12 +60,12 @@ exports.createAnnouncement = catchAsync(async (req, res, next) => {
 });
 
 exports.updateAnnouncement = catchAsync(async (req, res, next) => {
-  const { title, coverImage, content } = req.body;
+  const { title, link, content } = req.body;
   const announcement = await Announcement.findByIdAndUpdate(
     req.params.id,
     {
       title,
-      coverImage,
+      link,
       content,
       $push: {
         addedOrUpdatedBy: {

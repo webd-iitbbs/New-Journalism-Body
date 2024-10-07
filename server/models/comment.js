@@ -23,12 +23,18 @@ const commentSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  likes: {
-    type: [String],
-  },
-  dislikes: {
-    type: [String],
-  },
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  dislikes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 commentSchema.index({ articleId: 1, date: -1 });
