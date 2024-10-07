@@ -52,6 +52,7 @@ const Allarticle = () => {
     };
     const gotopage = (pageinput) => {
         const newPage = parseInt(page) + pageinput;
+        if (newPage < 1) return;
         navigate(`/articles?article=${selectedCategory}&limit=${limit}&page=${newPage}`);
     }
     console.log(fetchedArticles);
@@ -122,13 +123,13 @@ const Allarticle = () => {
 
             <div className="flex justify-center gap-4 mt-24">
                 {articles.length > 0 && <div class="flex" >
-                    <button href="#" class="flex items-center justify-center px-4 h-10 me-3 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    {parseInt(page) !== 1 && <button href="#" class="flex items-center justify-center px-4 h-10 me-3 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                         onClick={() => { gotopage(-1) }}                    >
                         <svg class="w-3.5 h-3.5 me-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4" />
                         </svg>
                         Previous
-                    </button>
+                    </button>}
                     <button href="#" class="flex items-center justify-center px-4 h-10 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                         onClick={() => { gotopage(1) }}     >
                         Next
