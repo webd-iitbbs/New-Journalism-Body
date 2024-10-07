@@ -64,24 +64,24 @@ const Allarticle = () => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "recent" ? "bg-black" : "bg-gray-200"}`}
+                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "recent" ? "bg-[#2A2A2A]" : "bg-gray-500"}`}
                         onClick={() => { setSelectedCategory("recent") }}
                     >
                         Recent
                     </button>
-                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "trending" ? "bg-black" : "bg-gray-200"}`}
+                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "trending" ? "bg-[#2A2A2A]" : "bg-gray-500"}`}
                         onClick={() => { setSelectedCategory("trending") }}
                     >
                         Trending
                     </button>
-                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "most-read" ? "bg-black" : "bg-gray-200"}`}
+                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "most-read" ? "bg-[#2A2A2A]" : "bg-gray-500"}`}
                         onClick={() => { setSelectedCategory("most-read") }}
                     >
                         Most Read
                     </button>
                     <div className="relative w-full sm:w-auto">
                         <button
-                            className="px-4 py-2 bg-gray-200 rounded-md w-full sm:w-auto flex items-center justify-center text-center"
+                            className="px-4 py-2 bg-gray-500 text-white rounded-md w-full sm:w-auto flex items-center justify-center text-center"
                             onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
                         >
                             Categories {isCategoryDropdownOpen ? <FaChevronDown className="ml-2" /> : <FaChevronRight className="ml-2" />}

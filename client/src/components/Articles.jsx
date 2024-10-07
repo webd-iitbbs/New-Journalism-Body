@@ -70,7 +70,7 @@ const Articles = () => {
             <div className='p-4 md:px-20 text-6xl font-black border-b-4 border-black' style={{ fontFamily: 'monospace' }}>
                 Articles
             </div>
-            <div className='p-4 md:px-8 flex flex-col md:flex-row gap-8 mt-8 lg:gap-24'>
+            <div className='p-4 md:px-8 flex flex-col md:flex-row gap-8 mt-8 lg:gap-16 '>
                 {/* Sidebar */}
                 <motion.div
                     className='lg:w-1/4'
@@ -79,26 +79,26 @@ const Articles = () => {
                     viewport={{ once: true, amount: 0.2 }} // Trigger once when 50% of the element is in view
                     variants={categoryVariants}
                 >
-                    <div className='bg-[#2A2A2A] text-white rounded-lg p-6 shadow-lg sm:sticky sm:top-20'>
-                        <div className='text-2xl py-4 border-b border-gray-500 flex justify-between items-center' onClick={() => handleCategoryChange('recent')}>
+                    <div className='bg-[#2A2A2A] text-white rounded-lg p-6 shadow-lg sm:sticky sm:top-20 w-full sm:w-2/3 md:w-full mx-auto'>
+                        <div className='text-2xl py-4 border-b border-gray-500 flex justify-between items-center cursor-pointer' onClick={() => handleCategoryChange('recent')}>
                             <span>Recent Articles</span>
                             <div className='pt-2'>
                                 {selectedCategory === 'recent' ? <FaChevronDown className='text-gray-400' /> : <FaChevronRight className='text-gray-400' />}
                             </div>
                         </div>
-                        <div className='text-2xl py-4 border-b border-gray-500 flex justify-between items-center' onClick={() => handleCategoryChange('trending')}>
+                        <div className='text-2xl py-4 border-b border-gray-500 flex justify-between items-center cursor-pointer' onClick={() => handleCategoryChange('trending')}>
                             <span>Trending News</span>
                             <div className='pt-2'>
                                 {selectedCategory === 'trending' ? <FaChevronDown className='text-gray-400' /> : <FaChevronRight className='text-gray-400' />}
                             </div>
                         </div>
-                        <div className='text-2xl py-4 border-b border-gray-500 flex justify-between items-center' onClick={() => handleCategoryChange('most-read')}>
+                        <div className='text-2xl py-4 border-b border-gray-500 flex justify-between items-center cursor-pointer' onClick={() => handleCategoryChange('most-read')}>
                             <span>Most Read</span>
                             <div className='pt-2'>
                                 {selectedCategory === 'most-read' ? <FaChevronDown className='text-gray-400' /> : <FaChevronRight className='text-gray-400' />}
                             </div>
                         </div>
-                        <div className='text-2xl py-4 flex justify-between items-center' onClick={() => handleCategoryChange('category')}>
+                        <div className='text-2xl py-4 flex justify-between items-center cursor-pointer' onClick={() => handleCategoryChange('category')}>
                             <span>Categories</span>
                             <div className='pt-2'>
                                 {selectedCategory === 'category' ? <FaChevronDown className='text-gray-400' /> : <FaChevronRight className='text-gray-400' />}

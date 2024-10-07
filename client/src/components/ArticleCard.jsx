@@ -9,12 +9,12 @@ const ArticleCard = ({ article }) => {
     return doc.body.innerText; // Get the text content
   };
   return (
-    <div className="">
+    <div className="w-full sm:w-2/3 md:w-full mx-auto">
 
       <div className="h-full border-2 border-gray-800 rounded-lg overflow-hidden hover:scale-[1.01] hover:shadow-[10px_15px_15px_5px_rgba(0,0,0,0.3)]">
-        <div className="flex justify-center items-center h-64">
+        <div className=" flex justify-center items-center  lg:h-72 md:h-64 sm:h-48">
           <img
-            className="object-contain h-full rounded-lg p-1"
+            className=" w-full lg:h-72 md:h-64  object-center sm:h-48"
             src={article.coverImage || "https://dummyimage.com/720x400"}
             alt="blog"
           />
