@@ -32,7 +32,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className="bg-[#F9F4ED] pt-6  md:pt-8 pr-8 pl-8 pb-4"
+    className="bg-[#F9F4ED] pt-6 pl-4 pr-4 md:pt-8 md:pl-20 md:pr-20 pb-4"
     // style={{ fontFamily: "HelveticaNeue, Arial, sans-serif" }}
     >
       <div className="container mx-auto px-4 flex justify-between items-center rounded-full border-black border-2 p-2 shadow-xl ">

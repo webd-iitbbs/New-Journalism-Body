@@ -40,7 +40,7 @@ function Mainpage() {
                 {/* <div>Image</div>
                     </div> */}
                 {/* </div> */}
-                <header className="text-center mt-2 px-4 flex flex-col-reverse md:flex-col items-center">
+                <header className="text-center mt-2 flex flex-col-reverse px-2 md:flex-col items-center">
                     <div className="mt-2  order-1 md:mt-0 md:order-2">
                         <img
                             src={voice} 
@@ -48,11 +48,11 @@ function Mainpage() {
                             className="w-full max-w-sm md:max-w-lg mx-auto"
                         />
                     </div>
-                    <div className='order-2 md:order-1'>
-                        <h1 className="text-[48px] md:text-[72px] font-bold text-gray-800 leading-snug" style={{ fontFamily: "Newsreader" }}>
+                    <div className='order-2 md:order-1 mt-2'>
+                        <h1 className=" text-[36px] sm:text-[64px] md:text-[72px] max-w-3xl text-gray-800 leading-tight font-bold" style={{ fontFamily: "Newsreader" }}>
                             amplifying voices, <br></br><span className="text-[#AF695C]">shaping stories</span>
                         </h1>
-                        <p className="text-[16px] md:text-[24px] text-gray-600 mt-4 max-w-xl mx-auto" style={{ fontFamily: "Metro Sans" }}>
+                        <p className="text-[1px] sm:text-[16px] md:text-[24px] text-gray-600 mt-4 max-w-3xl mx-auto leading-tight" style={{ fontFamily: "Metro Sans" }}>
                             Your platform for honest reporting, thoughtful storytelling, and <span className="text-[#AF695C]">IIT Bhubaneswar Campus’s Engagement</span>.
                         </p>
                     </div>
