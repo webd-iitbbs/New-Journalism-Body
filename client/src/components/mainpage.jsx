@@ -2,12 +2,13 @@ import React from 'react'
 import keyboarding from './../assets/keyboard.jpg'
 import newspaper from './../assets/newpaper.jpg'
 import instiimg from './../assets/insti1.png'
+import voice from './../assets/voice.png'
 import chiefeditor from './../assets/CE1.JPG'
 function Mainpage() {
     return (
         <>
             <div className='max-w-full overflow-clip bg-[#F9F4ED]'>
-                <div className='flex flex-col md:flex-row w-full p-5 md:p-10'>
+                {/* <div className='flex flex-col md:flex-row w-full p-5 md:p-10'>
                     <div className='w-full md:w-1/2 flex flex-col mb-6 md:mb-0'>
                         <div className='bg-[#2A2A2A] rounded-[20px] p-6 mb-4'>
                             <div className='text-[28px] md:text-[35px] lg:text-[64px] font-[Metro Sans] font-bold text-[#F9F4ED] text-start'>
@@ -36,9 +37,27 @@ function Mainpage() {
 
                     <div className='hidden md:flex w-full md:w-1/2 rounded-[20px] justify-center overflow-hidden ml-0 md:ml-6 bg-red-300'>
                         {/* <img src={keyboarding} alt="Keyboarding" className='rounded-[20px] w-full h-min ' /> */}
-                        <div>Image</div>
+                {/* <div>Image</div>
+                    </div> */}
+                {/* </div> */}
+                <header className="text-center mt-2 px-4 flex flex-col-reverse md:flex-col items-center">
+                    <div className="mt-2  order-1 md:mt-0 md:order-2">
+                        <img
+                            src={voice} 
+                            alt="Microphones"
+                            className="w-full max-w-sm md:max-w-lg mx-auto"
+                        />
                     </div>
-                </div>
+                    <div className='order-2 md:order-1'>
+                        <h1 className="text-[48px] md:text-[72px] font-bold text-gray-800 leading-snug" style={{ fontFamily: "Newsreader" }}>
+                            amplifying voices, <br></br><span className="text-[#AF695C]">shaping stories</span>
+                        </h1>
+                        <p className="text-[16px] md:text-[24px] text-gray-600 mt-4 max-w-xl mx-auto" style={{ fontFamily: "Metro Sans" }}>
+                            Your platform for honest reporting, thoughtful storytelling, and <span className="text-[#AF695C]">IIT Bhubaneswar Campus’s Engagement</span>.
+                        </p>
+                    </div>
+                </header>
+
             </div>
 
             <div className='bg-[#2A2A2A]' id="aboutus">

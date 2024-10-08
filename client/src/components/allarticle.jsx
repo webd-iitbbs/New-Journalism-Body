@@ -57,7 +57,7 @@ const Allarticle = () => {
     }
     console.log(fetchedArticles);
     return (
-        <div className="p-8 min-h-screen bg-gray-100">
+        <div className="p-8 min-h-screen bg-[#F9F4ED]">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
                 <div className="relative w-full sm:w-1/3">
                     <input
@@ -71,24 +71,24 @@ const Allarticle = () => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "recent" ? "bg-[#2A2A2A]" : "bg-gray-500"}`}
+                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "recent" ? "bg-[#f06f55]" : "bg-[#A55242]"}`}
                         onClick={() => { setSelectedCategory("recent") }}
                     >
                         Recent
                     </button>
-                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "trending" ? "bg-[#2A2A2A]" : "bg-gray-500"}`}
+                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "trending" ? "bg-[#f06f55]" : "bg-[#A55242]"}`}
                         onClick={() => { setSelectedCategory("trending") }}
                     >
                         Trending
                     </button>
-                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "most-read" ? "bg-[#2A2A2A]" : "bg-gray-500"}`}
+                    <button className={`px-4 py-2 text-white rounded-md w-full sm:w-auto ${selectedCategory === "most-read" ? "bg-[#f06f55]" : "bg-[#A55242]"}`}
                         onClick={() => { setSelectedCategory("most-read") }}
                     >
                         Most Read
                     </button>
                     <div className="relative w-full sm:w-auto">
                         <button
-                            className="px-4 py-2 bg-gray-500 text-white rounded-md w-full sm:w-auto flex items-center justify-center text-center"
+                            className="px-4 py-2 bg-[#A55242] text-white rounded-md w-full sm:w-auto flex items-center justify-center text-center"
                             onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
                         >
                             Categories {isCategoryDropdownOpen ? <FaChevronDown className="ml-2" /> : <FaChevronRight className="ml-2" />}

@@ -13,12 +13,12 @@ const Navbar = () => {
   const authCtx = useAuth();
   console.log(authCtx);
   const routes = [
-    { path: "/", name: "Home", title: "Home" },
-    { path: "/about", name: "About Us" },
-    { path: "/articles?limit=10", name: "Articles" },
-    { path: "/opinions", name: "Opinions" },
+    { path: "/", name: "Home", title: "Home", className: "text-[#2A2A2A] font-medium " },
+    { path: "/about", name: "About Us", className: "text-[#2A2A2A] font-medium " },
+    { path: "/articles?limit=10", name: "Articles", className: "text-[#2A2A2A] font-medium " },
+    { path: "/opinions", name: "Opinions", className: "text-[#2A2A2A] font-medium " },
     !authCtx.isLoggedIn
-      ? { path: "/login", name: "Log In", title: "LogIn to full access" }
+      ? { path: "/login", name: "Log In", title: "LogIn to full access", className: "bg-[#A55242] text-white px-4 py-2 rounded-full hover:bg-[#a14646]" }
       : null,
   ].filter(Boolean);
 
@@ -32,27 +32,37 @@ const Navbar = () => {
 
   return (
     <nav
-      className="sticky top-0 z-50 bg-[#f9f4ed] p-2 border-b-2 border-[#d8d6d2]"
-      style={{ fontFamily: "HelveticaNeue, Arial, sans-serif" }}
+      className="bg-[#F9F4ED] pt-6  md:pt-8 pr-8 pl-8 pb-4"
+    // style={{ fontFamily: "HelveticaNeue, Arial, sans-serif" }}
     >
-      <div className="container mx-auto flex justify-between items-center">
+      <div className="container mx-auto px-4 flex justify-between items-center rounded-full border-black border-2 p-2 shadow-xl ">
         {/* Logo */}
         <div className="text-black text-3xl font-semibold flex flex-row">
-          <li className="flex title-font font-medium items-center md:justify-start justify-center text-white mr-1 sm:mr-3">
+          <div className="text-2xl font-bold text-gray-800 flex items-center">
+            <img
+              src={logo}// Replace with your actual logo
+              alt="Oracle Logo"
+              className="h-[40px] w-[40px] mr-2"
+            />
+            <Link to="/" className="">
+              Oracle
+            </Link>
+          </div>
+          {/* <li className="flex title-font font-medium items-center md:justify-start justify-center text-white mr-1 sm:mr-3">
             <img
               src={logo}
               alt="Oracle Logo"
               className="w-14 h-14 rounded-full"
             />
             {/* <span className="ml-3 text-3xl">Oracle</span> */}
-          </li>
-          <Link to="/" className="pt-3">
+          {/* </li> */}
+          {/* <Link to="/" className="pt-3">
             ORACLE
-          </Link>
+          </Link> */}
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-4 pt-3 relative items-center text-lg">
+        <div className={`hidden md:flex space-x-8 items-center`}>
           <ul className="flex space-x-4">
             <li key="admin">
               <AdminRoutes />
@@ -62,18 +72,19 @@ const Navbar = () => {
                 key={path.path}
                 className="relative"
                 title={path.title}
-                whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
+                whileHover={{ scale: 1.2, transition: { duration: 0.05 } }}
               >
                 <Link
                   to={path.path}
-                  className={`text-black font-medium pb-1 relative`}
+                  className={path.className}
                   onClick={() => setActive(path.path)}
+                  style={{ fontFamily: "Metro Sans" }}
                 >
                   {path.name}
                 </Link>
-                {active === path.path && (
+                {active === path.path && path.path != "/login" && (
                   <motion.div
-                    className="absolute bottom-0 left-0 w-full h-[2px] bg-blue-500"
+                    className="absolute bottom-0 left-0 w-full h-[2px] bg-[#A55242]"
                     layoutId="underline"
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
@@ -105,30 +116,34 @@ const Navbar = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : -20 }}
         transition={{ duration: 0.3 }}
-        className={`${
-          isOpen ? "block" : "hidden"
-        } md:hidden absolute top-16 left-0 w-full bg-[#f9f4ed] border-t-2 border-[#d8d6d2] shadow-lg`}
+        className={`${isOpen ? "block" : "hidden"
+          } md:hidden bg-[#A55242] rounded-xl py-2 space-y-4 px-2 mt-4 border-[#000000] border-[1px]`}
       >
-        <ul className="py-4 text-center text-lg">
+        <ul className="text-center text-lg mx-auto pl-8 pr-8">
           <li
             key="admin"
-            className="block px-4 py-2 text-black font-medium text-center flex justify-center"
+            className="block px-4 py-2 text-[#FDEEDA] font-medium text-center flex justify-center"
           >
             <AdminRoutes />
           </li>
           {routes.map((path) => (
-            <li key={path.path} className="py-2">
-              <Link
-                to={path.path}
-                className={`block px-4 py-2 text-black font-medium`}
-                onClick={() => {
-                  setActive(path.path);
-                  setIsOpen(false); // Close menu on link click
-                }}
-              >
-                {path.name}
-              </Link>
-            </li>
+            <>
+              <li key={path.path} className="py-2">
+                <Link
+                  to={path.path}
+                  className={`block text-[#FDEEDA] font-medium hover:text-gray-500`}
+                  style={{ fontFamily: "Metro Sans" }}
+                  onClick={() => {
+                    setActive(path.path);
+                    setIsOpen(false); // Close menu on link click
+                  }}
+                >
+                  {path.name}
+                </Link>
+              </li>
+              <div className="bg-white h-[1px]  "></div>
+            </>
+
           ))}
 
           <li className="block px-4 py-2 text-black font-medium text-center flex justify-center">
@@ -185,9 +200,8 @@ const AdminRoutes = () => {
 
       <motion.div
         id="dropdownNavbar"
-        className={`absolute z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${
-          isOpen ? "block" : "hidden"
-        }`}
+        className={`absolute z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${isOpen ? "block" : "hidden"
+          }`}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: isOpen ? 1 : 0, scale: isOpen ? 1 : 0.9 }}
         transition={{ duration: 0.3 }}
@@ -244,17 +258,16 @@ const Profiles = () => {
             "https://img.freepik.com/vector-premium/icono-perfil-avatar_188544-4755.jpg?w=360"
           }
           alt="profile"
-          width={25}
-          height={25}
+          width={28}
+          height={28}
           className="rounded-2xl"
         />
       </button>
 
       <motion.div
         id="dropdownNavbar"
-        className={`absolute right-[-10px] z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${
-          isOpen ? "block" : "hidden"
-        }`}
+        className={`absolute right-[-10px] z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${isOpen ? "block" : "hidden"
+          }`}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: isOpen ? 1 : 0, scale: isOpen ? 1 : 0.9 }}
         transition={{ duration: 0.3 }}

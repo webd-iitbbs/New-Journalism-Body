@@ -162,7 +162,7 @@ const Articlepage = () => {
       )}
       <div className="flex flex-col lg:flex-row gap-4">
         <div className="w-full ">
-          <div className="flex flex-col md:flex-row gap-8 pb-8 border-b-2 border-black-800">
+          <div className="flex flex-col md:flex-row gap-8 pb-8 border-b-2 border-black-800 pl-2 pr-2">
             <div className="w-full md:w-1/2 max-h-1/2 relative">
               <img
                 src={article.coverImage}

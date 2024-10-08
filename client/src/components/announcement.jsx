@@ -22,7 +22,7 @@ const Announcement = () => {
     window.open(link, "_blank"); // opens in a new tab
   };
   return (
-    <div className="w-full bg-black text-white flex items-center justify-center overflow-hidden relative h-12">
+    <div className="w-full bg-[#AF695C] text-[#FDEEDA] flex items-center justify-center overflow-hidden relative h-12">
       {/* Single container for both announcements */}
       <div className="whitespace-nowrap absolute animate-scroll ">
         {/* <span className="px-4 cursor-pointer">
