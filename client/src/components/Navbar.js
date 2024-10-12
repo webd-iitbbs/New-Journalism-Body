@@ -13,12 +13,35 @@ const Navbar = () => {
   const authCtx = useAuth();
   console.log(authCtx);
   const routes = [
-    { path: "/", name: "Home", title: "Home", className: "text-[#2A2A2A] font-medium " },
-    { path: "/about", name: "About Us", className: "text-[#2A2A2A] font-medium " },
-    { path: "/articles?limit=10", name: "Articles", className: "text-[#2A2A2A] font-medium " },
-    { path: "/opinions", name: "Opinions", className: "text-[#2A2A2A] font-medium " },
+    {
+      path: "/",
+      name: "Home",
+      title: "Home",
+      className: "text-[#2A2A2A] font-medium ",
+    },
+    {
+      path: "/about",
+      name: "About Us",
+      className: "text-[#2A2A2A] font-medium ",
+    },
+    {
+      path: "/articles?limit=10",
+      name: "Articles",
+      className: "text-[#2A2A2A] font-medium ",
+    },
+    {
+      path: "/opinions",
+      name: "Opinions",
+      className: "text-[#2A2A2A] font-medium ",
+    },
     !authCtx.isLoggedIn
-      ? { path: "/login", name: "Log In", title: "LogIn to full access", className: "bg-[#A55242] text-white px-4 py-2 rounded-full hover:bg-[#a14646]" }
+      ? {
+          path: "/login",
+          name: "Log In",
+          title: "LogIn to full access",
+          className:
+            "bg-[#A55242] text-white px-4 py-2 rounded-full hover:bg-[#a14646]",
+        }
       : null,
   ].filter(Boolean);
 
@@ -32,15 +55,15 @@ const Navbar = () => {
 
   return (
     <nav
-    className="bg-[#F9F4ED] pt-6 pl-4 pr-4 md:pt-8 md:pl-20 md:pr-20 pb-4"
-    // style={{ fontFamily: "HelveticaNeue, Arial, sans-serif" }}
+      className="bg-[#F9F4ED]/60 backdrop-blur-md pt-6 pl-4 pr-4 md:pt-8 md:pl-20 md:pr-20 pb-4 sticky top-0 z-50"
+      // style={{ fontFamily: "HelveticaNeue, Arial, sans-serif" }}
     >
       <div className="container mx-auto px-4 flex justify-between items-center rounded-full border-black border-2 p-2 shadow-xl ">
         {/* Logo */}
         <div className="text-black text-3xl font-semibold flex flex-row">
           <div className="text-2xl font-bold text-gray-800 flex items-center">
             <img
-              src={logo}// Replace with your actual logo
+              src={logo}
               alt="Oracle Logo"
               className="h-[40px] w-[40px] mr-2"
             />
@@ -116,8 +139,9 @@ const Navbar = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : -20 }}
         transition={{ duration: 0.3 }}
-        className={`${isOpen ? "block" : "hidden"
-          } md:hidden bg-[#A55242] rounded-xl py-2 space-y-4 px-2 mt-4 border-[#000000] border-[1px]`}
+        className={`${
+          isOpen ? "block" : "hidden"
+        } md:hidden bg-[#A55242] rounded-xl py-2 space-y-4 px-2 mt-4 border-[#000000] border-[1px]`}
       >
         <ul className="text-center text-lg mx-auto pl-8 pr-8">
           <li
@@ -143,7 +167,6 @@ const Navbar = () => {
               </li>
               <div className="bg-white h-[1px]  "></div>
             </>
-
           ))}
 
           <li className="block px-4 py-2 text-black font-medium text-center flex justify-center">
@@ -200,8 +223,9 @@ const AdminRoutes = () => {
 
       <motion.div
         id="dropdownNavbar"
-        className={`absolute z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${isOpen ? "block" : "hidden"
-          }`}
+        className={`absolute z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${
+          isOpen ? "block" : "hidden"
+        }`}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: isOpen ? 1 : 0, scale: isOpen ? 1 : 0.9 }}
         transition={{ duration: 0.3 }}
@@ -266,8 +290,9 @@ const Profiles = () => {
 
       <motion.div
         id="dropdownNavbar"
-        className={`absolute right-[-10px] z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${isOpen ? "block" : "hidden"
-          }`}
+        className={`absolute right-[-10px] z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ${
+          isOpen ? "block" : "hidden"
+        }`}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: isOpen ? 1 : 0, scale: isOpen ? 1 : 0.9 }}
         transition={{ duration: 0.3 }}

@@ -6,12 +6,10 @@ const AboutUs = () => {
 
   useEffect(() => {
     console.log(location.pathname);
-    if (location.pathname === "/about") {
-      navigate("/", { replace: true });
-      setTimeout(() => {
-        scrollToElementById("aboutus");
-      }, 100);
-    }
+    navigate("/", { replace: true });
+    setTimeout(() => {
+      scrollToElementById("aboutus");
+    }, 10);
   }, []);
 
   const scrollToElementById = (id) => {
@@ -21,7 +19,7 @@ const AboutUs = () => {
     }
   };
 
-  return <div>Loading...</div>;
+  return <div></div>;
 };
 
 export default AboutUs;
