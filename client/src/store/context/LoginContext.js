@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }) => {
               Authorization: `Bearer ${AccessToken}`,
             },
           });
-          console.log(response.data);
+          // console.log(response.data);
           setIsAdmin(response.data.admin);
         } catch (error) {
           console.error("Error verifying email", error);

@@ -76,7 +76,7 @@ const uploadHandlerServer = async (file: any) => {
 
 const getLocalDataAndDecrypt = (key) => {
   const data = localStorage.getItem(key);
-  console.log(data);
+  // console.log(data);
   if (data) {
     return decryptData(data);
   }

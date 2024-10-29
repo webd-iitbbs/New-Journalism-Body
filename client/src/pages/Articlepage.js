@@ -47,7 +47,7 @@ const Articlepage = () => {
 
       const getLocalData = getLocalDataAndDecrypt("articlesSeen") || [];
 
-      console.log(getLocalData);
+      // console.log(getLocalData);
       const articleIndex = getLocalData.findIndex(
         (entry) => entry.slug === article.slug
       );
@@ -87,7 +87,7 @@ const Articlepage = () => {
     const isliked = article?.upVotes?.some(
       (upVoteId) => upVoteId === authCtx?.userId
     );
-    console.log(isliked);
+    // console.log(isliked);
     setIsLiked(isliked); // Set isLiked as true or false
   }, [article, authCtx.userId]);
 
@@ -149,7 +149,7 @@ const Articlepage = () => {
 
   return (
     <div
-      className="p-2 mt-10 md:p-12 flex flex-col gap-4"
+      className="p-4  md:p-24 sm:p-6 flex flex-col gap-4"
       style={{ fontFamily: "Arial" }}
     >
       {authCtx.isAdmin && (
@@ -167,10 +167,10 @@ const Articlepage = () => {
               <img
                 src={article.coverImage}
                 alt="Cover pic"
-                className=" object-fill   rounded-lg h-full"
+                className=" object-fill rounded-lg h-full"
               />
 
-              <div className="absolute bottom-0 p-2 flex flex-row gap-4">
+              {/* <div className="absolute bottom-0 p-2 flex flex-row gap-4">
                 <div>
                   {!isLiked ? (
                     <FaRegThumbsUp
@@ -200,7 +200,7 @@ const Articlepage = () => {
                   className="hover:fill-blue-500 cursor-pointer"
                   onClick={shareHandler}
                 />
-              </div>
+              </div> */}
             </div>
             <div className="w-full flex flex-col md:w-1/2">
               <div className="text-lg mb-2">
@@ -230,7 +230,7 @@ const Articlepage = () => {
           >
             <div
               dangerouslySetInnerHTML={{ __html: article.content }}
-              className="text-justify mt-8 "
+              className="text-left mt-8 "
             ></div>
           </div>
         </div>

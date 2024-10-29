@@ -66,8 +66,8 @@ const Articles = () => {
     };
 
     return (
-        <div className='min-h-screen bg-white flex flex-col' id="articles">
-            <div className='p-4 md:px-20 text-6xl font-black border-b-4 border-black' style={{ fontFamily: 'monospace' }}>
+        <div className='min-h-screen bg-[#F9F4ED] flex flex-col' id="articles">
+            <div className='p-4 md:px-20 text-6xl font-black border-b-4 border-t-4  border-black' style={{ fontFamily: 'monospace' }}>
                 Articles
             </div>
             <div className='p-4 md:px-8 flex flex-col md:flex-row gap-8 mt-8 lg:gap-16 '>

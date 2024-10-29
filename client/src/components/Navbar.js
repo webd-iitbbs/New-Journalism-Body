@@ -11,7 +11,7 @@ const Navbar = () => {
   const [active, setActive] = useState(location.pathname);
   const [isOpen, setIsOpen] = useState(false); // State for hamburger menu
   const authCtx = useAuth();
-  console.log(authCtx);
+  // console.log(authCtx);
   const routes = [
     {
       path: "/",

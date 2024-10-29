@@ -52,7 +52,7 @@ function Mainpage() {
                         <h1 className=" text-[36px] sm:text-[64px] md:text-[72px] max-w-3xl text-gray-800 leading-tight font-bold" style={{ fontFamily: "Newsreader" }}>
                             amplifying voices, <br></br><span className="text-[#AF695C]">shaping stories</span>
                         </h1>
-                        <p className="text-[1px] sm:text-[16px] md:text-[24px] text-gray-600 mt-4 max-w-3xl mx-auto leading-tight" style={{ fontFamily: "Metro Sans" }}>
+                        <p className="text-[16px] sm:text-[16px] md:text-[24px] text-gray-600 mt-4 max-w-3xl mx-auto leading-tight" style={{ fontFamily: "Metro Sans" }}>
                             Your platform for honest reporting, thoughtful storytelling, and <span className="text-[#AF695C]">IIT Bhubaneswar Campus’s Engagement</span>.
                         </p>
                     </div>
@@ -60,7 +60,7 @@ function Mainpage() {
 
             </div>
 
-            <div className='bg-[#2A2A2A]' id="aboutus">
+            {/* <div className='bg-[#2A2A2A]' id="aboutus">
                 <div className='flex flex-col md:flex-row w-full h-full p-5 md:p-10'>
                     <div className='w-full md:w-1/2 h-[300px] md:h-[680px] p-6 overflow-hidden rounded-[20px] bg-[#F9F4ED] mb-6 md:mb-0'>
                         <img src={instiimg} className='h-full  scale-[2.8] md:scale-[1.8] translate-y-12' alt="Institute" />
@@ -84,8 +84,8 @@ function Mainpage() {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="flex flex-col items-center px-5 py-10 bg-gray-50 min-h-screen ">
+            </div> */}
+            {/* <div className="flex flex-col items-center px-5 py-10 bg-gray-50 min-h-screen ">
                 <div className="text-center mb-4 md:mb-8">
                     <h1 className="text-3xl lg:text-6xl font-bold">
                         MEET YOUR <span className="text-red-400">CHIEF EDITOR</span>
@@ -122,7 +122,7 @@ function Mainpage() {
                     </div>
 
                 </div>
-            </div>
+            </div> */}
 
         </>
     )

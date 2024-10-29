@@ -191,7 +191,7 @@ const Comment = ({ articleId }) => {
         }
     }, [data]);
 
-    console.log(data);
+    // console.log(data);
     // Calculate which comments to display
 
 
