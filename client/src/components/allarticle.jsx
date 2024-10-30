@@ -19,7 +19,7 @@ const Allarticle = () => {
     const [selectedCategory, setSelectedCategory] = useState(articletoSearch);
     const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
 
-    const categories = ["Student Life", "Entertaiment", "Ghymkhana", "Education"];
+    const categories = ["Student Life", "Entertaiment", "Gymkhana", "Education"];
     useEffect(() => {
         const validArticles = ["recent", "most-read", "trending", "category"];
         if (!validArticles.includes(selectedCategory)) {
